@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from models import User
 
@@ -18,3 +18,9 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
             raise ValidationError('Please use a different username.')
+        
+class PostForm(FlaskForm):
+    name = StringField('教材名', validators=[DataRequired(), Length(min=1, max=50)])
+    text = StringField('itemtext')
+    condition = SelectField('ユーザ名', coerce=int)
+    
