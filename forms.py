@@ -20,7 +20,27 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Please use a different username.')
         
 class PostForm(FlaskForm):
-    name = StringField('教材名', validators=[DataRequired(), Length(min=1, max=50)])
-    text = StringField('itemtext')
-    condition = SelectField('ユーザ名', coerce=int)
     
+    condition_choices = [
+        ('1', 'Option 1'),
+        ('2', 'Option 2'),
+        ('3', 'Option 3'),
+    ]
+    
+    category_choices = [
+        ('1', 'Option 1'),
+        ('2', 'Option 2'),
+        ('3', 'Option 3'),
+    ]
+    
+    genre_choices = [
+        ('1', 'Option 1'),
+        ('2', 'Option 2'),
+        ('3', 'Option 3'),
+    ]
+    
+    item_name = StringField('教材名', validators=[DataRequired(), Length(min=1, max=50)])
+    post_text = StringField('備考')
+    condition = SelectField('商品状態', choices=condition_choices)
+    category = SelectField('カテゴリー', choices=category_choices)
+    genre = SelectField('分類', choices=genre_choices)
