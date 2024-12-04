@@ -7,6 +7,7 @@ from forms import LoginForm, RegistrationForm
 import os
 
 app = Flask(__name__)
+# static_folder='./templates/images'
 
 # Configuration settings
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -29,7 +30,7 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    return render_template('home.html', name=current_user.username)
+    return render_template('headerfooter.html', name=current_user.username)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
