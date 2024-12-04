@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+/* ヘッダー */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #FFFCF3;
+    color: black;
+    border-bottom: 1px solid #808080;
+}
+header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    float: left;
+}
+header .icon, header .search {
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* フッター */
+footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    background-color: #FFFCF3;
+    color: black;
+    border-top: 1px solid #808080;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+footer .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+footer .tab img {
+    width: 40px;
+    height: 40px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    header, footer {
+        text-align: center;
+        height: 10vh;
+    }
+    header .logo, footer .tab {
+        margin: 5px 0;
+    }
+    footer .tab img{
+        width: 60px;
+        height: 60px;
+    }
+}
