@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from models import User
 
@@ -39,6 +39,7 @@ class PostForm(FlaskForm):
         ('3', 'Option 3'),
     ]
     
+    photo = FileField()
     item_name = StringField('教材名', validators=[DataRequired(), Length(min=1, max=50)])
     post_text = StringField('備考')
     condition = SelectField('商品状態', choices=condition_choices)

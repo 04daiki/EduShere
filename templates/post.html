@@ -11,6 +11,8 @@
     <form method="POST" action="">
         {{ form.csrf_token }}
         <p>
+            {{ form.photo }}<br>
+
             {{ form.item_name.label }}
             {{ form.item_name }}<br>
 
@@ -18,16 +20,15 @@
             {{ form.category }}<br>
 
             {{ form.genre.label }}
-            {{ form.gere }}<br>
+            {{ form.genre }}<br>
 
-            {{ form.item_name.label }}
-            {{ form.category.label }}<br>
+            {{ form.condition.label }}
+            {{ form.condition }}<br>
 
-            {{ form.item_name.label }}
-            {{ form.item_name.label }}<br>
+            {{ form.post_text.label }}
+            {{ form.post_text }}<br>
 
-            {{ form.item_name.label }}
-            {{ form.item_name.labe l}}<br>
+            {{ form.submit }}
         </p>
     </form>
 </body>
