@@ -7,15 +7,17 @@
     <!-- <link href="../static/css/style2.css" rel="stylesheet"> -->
 </head>
 <body>
-    <h2>Login</h2>
+    <h2>投稿</h2>
+    {% from "_formhelpers.html" import render_field %}
     <form method="POST" action="">
-        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {{ form.submit() }}
+            {{ render_field(form.item_name) }}<br>
+            {{ render_field(form.category) }}<br>
+            {{ render_field(form.genre) }}<br>
+            {{ render_field(form.condition) }}<br>
+            {{ render_field(form.post_text) }}<br>
+            {{ render_field(form.submit) }}<br>
         </p>
     </form>
 </body>

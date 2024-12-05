@@ -3,7 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User
-from forms import LoginForm, RegistrationForm 
+from forms import LoginForm, RegistrationForm, PostForm
 import os
 
 app = Flask(__name__)
@@ -63,6 +63,18 @@ def register():
         flash('ユーザー登録が完了しました。')
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
+@app.route('/post', methods=['GET', 'POST'])
+@login_required
+def post():
+    form = PostForm()
+    # POST時
+    # if form.validate_on_submit():
+        # return
+        
+    # GET時
+    
+    return render_template('post.html', form=form)
 
 if __name__ == '__main__':
     with app.app_context():

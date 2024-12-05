@@ -44,3 +44,4 @@ class PostForm(FlaskForm):
     condition = SelectField('商品状態', choices=condition_choices)
     category = SelectField('カテゴリー', choices=category_choices)
     genre = SelectField('分類', choices=genre_choices)
+    submit = SubmitField('投稿')
