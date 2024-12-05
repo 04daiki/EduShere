@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投稿画面</title>
+    <!-- <link href="../static/css/style2.css" rel="stylesheet"> -->
+</head>
+<body>
+    <h2>投稿</h2>
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+        <p>
+            {{ form.photo }}<br>
+
+            {{ form.item_name.label }}
+            {{ form.item_name }}<br>
+
+            {{ form.category.label }}
+            {{ form.category }}<br>
+
+            {{ form.genre.label }}
+            {{ form.genre }}<br>
+
+            {{ form.condition.label }}
+            {{ form.condition }}<br>
+
+            {{ form.post_text.label }}
+            {{ form.post_text }}<br>
+
+            {{ form.submit }}
+        </p>
+    </form>
+</body>
+</html>
