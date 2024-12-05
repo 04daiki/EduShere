@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, User
+from models import db, User, Pos
 from forms import LoginForm, RegistrationForm, PostForm
 import os
 
@@ -10,10 +10,17 @@ app = Flask(__name__)
 # static_folder='./templates/images'
 
 # Configuration settings
+CONNECT_INFO = 'sqlite:///app.db'
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'mysecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = CONNECT_INFO
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+engine = app.create_engine(CONNECT_INFO, encoding='utf-8')
+
+# セッション作成
+Session = app.orm.sessionmaker(bind=engine)
+session = Session()
 
 # Initialize extensions
 db.init_app(app)
