@@ -8,16 +8,26 @@
 </head>
 <body>
     <h2>投稿</h2>
-    {% from "_formhelpers.html" import render_field %}
     <form method="POST" action="">
         {{ form.csrf_token }}
         <p>
-            {{ render_field(form.item_name) }}<br>
-            {{ render_field(form.category) }}<br>
-            {{ render_field(form.genre) }}<br>
-            {{ render_field(form.condition) }}<br>
-            {{ render_field(form.post_text) }}<br>
-            {{ render_field(form.submit) }}<br>
+            {{ form.item_name.label }}
+            {{ form.item_name }}<br>
+
+            {{ form.category.label }}
+            {{ form.category }}<br>
+
+            {{ form.genre.label }}
+            {{ form.gere }}<br>
+
+            {{ form.item_name.label }}
+            {{ form.category.label }}<br>
+
+            {{ form.item_name.label }}
+            {{ form.item_name.label }}<br>
+
+            {{ form.item_name.label }}
+            {{ form.item_name.labe l}}<br>
         </p>
     </form>
 </body>
