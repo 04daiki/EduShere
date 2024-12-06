@@ -40,7 +40,11 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    return render_template('headerfooter.html', name=current_user.username)
+    # return render_template('headerfooter.html', name=current_user.username)
+
+    # 表示
+    posts = Post.query.order_by(Post.timestamps.desc()).all()
+    return render_template('home.html', name=current_user.username, posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
