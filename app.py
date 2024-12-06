@@ -43,7 +43,7 @@ def home():
     # return render_template('headerfooter.html', name=current_user.username)
 
     # 表示
-    posts = Post.query.order_by(Post.timestamps.desc()).all()
+    posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
     return render_template('home.html', name=current_user.username, posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -114,7 +114,10 @@ def post():
     # GET時
     
     return render_template('post.html',form=form)
-    
+
+@app.route('/detail/<int:post_id>')
+def show_detail(post_id):
+    return render_template('detail.html')
 
 if __name__ == '__main__':
     with app.app_context():

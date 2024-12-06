@@ -27,9 +27,14 @@
     <div class="posts">
         {% for post in posts %}
             <div class="post">
+                <h2>{{ post.item_name }}</h2>
+                <p>{{ post.post_text }}</p>
+                <p>商品状態: {{ post.condition }}</p>
+                <p>カテゴリー: {{ post.category }}</p>
+                <p>分類: {{ post.genre }}</p>
+
                 <!-- 画像の表示 -->
-                <p>#{{ post.category }}</p>
-                <a href="{{ url_for('show_detail', post_id=post.post_id)}}"><img src="{{post.image_path}}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;"></a>
+                <img src="{{post.image_path}}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;">
             </div>
         {% endfor %}
     </div>
@@ -42,10 +47,12 @@
                 <span>ホーム</span>
             </div>
         </a>
-        <div class="tab">
-            <img src="../static/images/notification-icon_2.png" alt="通知">
-            <span>通知</span>
-        </div>
+        <a href="/">
+            <div class="tab">
+                <img src="../static/images/notification-icon_2.png" alt="通知">
+                <span>通知</span>
+            </div>
+        </a>
         <a href="/post">
             <div class="tab">
                 <img src="../static/images/upload-icon_2.png" alt="出品">
