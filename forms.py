@@ -22,27 +22,46 @@ class RegistrationForm(FlaskForm):
 class PostForm(FlaskForm):
     
     condition_choices = [
-        ('1', 'Option 1'),
-        ('2', 'Option 2'),
-        ('3', 'Option 3'),
+        ('', '選択してください'),  # 初期値
+        ('1', '未開封'),
+        ('2', '非常に良い'),
+        ('3', '良い'),
+        ('4', '傷あり'),
+        ('5', '汚れあり'),
+        ('6', '傷と汚れあり'),
+        ('7', 'ジャンク品'),
     ]
     
     category_choices = [
+        ('', '選択してください'),  # 初期値
         ('1', 'Option 1'),
         ('2', 'Option 2'),
         ('3', 'Option 3'),
+        ('4', 'その他'),
     ]
     
     genre_choices = [
-        ('1', 'Option 1'),
-        ('2', 'Option 2'),
-        ('3', 'Option 3'),
+        ('', '選択してください'),  # 初期値
+        ('1', '参考書'),
+        ('2', '問題集'),
+        ('3', '教科書'),
+        ('4', '機材'),
+        ('5', 'その他'),
     ]
     
-    photo = FileField()
+    subject_choices = [
+        ('', '選択してください'),  # 初期値
+        ('1', '国語'),
+        ('2', '数学'),
+        ('3', 'ドイツ語'),
+        ('4', 'その他'),
+    ]
+    
+    photo = FileField('画像を追加する')
     item_name = StringField('教材名', validators=[DataRequired(), Length(min=1, max=50)])
-    post_text = StringField('備考')
-    condition = SelectField('商品状態', choices=condition_choices)
-    category = SelectField('カテゴリー', choices=category_choices)
-    genre = SelectField('分類', choices=genre_choices)
+    post_text = StringField('コメント')
+    condition = SelectField('商品状態', choices=condition_choices, validators=[DataRequired()])
+    category = SelectField('カテゴリー', choices=category_choices, validators=[DataRequired()])
+    genre = SelectField('分類', choices=genre_choices, validators=[DataRequired()])
+    Subject = SelectField('科目', choices=subject_choices, validators=[DataRequired()])
     submit = SubmitField('投稿')
