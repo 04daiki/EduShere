@@ -95,9 +95,12 @@ def post():
 
             # 保存パスを構築
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
-
+            
             # ファイルを保存
             file.save(file_path)
+            
+            #teplatesディレクトリからの相対パスに変換
+            file_path = "." + file_path
         
         post = Post(post_text = form.post_text.data, user_id = current_user.id, image_path=file_path, 
                     item_name=form.item_name.data, condition=form.condition.data, category=form.category.data, genre=form.genre.data, status=1)

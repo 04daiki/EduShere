@@ -34,7 +34,7 @@
                 <p>分類: {{ post.genre }}</p>
 
                 <!-- 画像の表示 -->
-                <img src="{{ url_for('static', filename='uploads/' + post.image_path.split('/')[-1]) }}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;">
+                <img src="{{post.image_path}}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;">
             </div>
         {% endfor %}
     </div>
