@@ -24,8 +24,8 @@
     </main>
 
     <!-- 表示 -->
-    <div class="posts">
-        {% for post in posts %}
+    <div class="post">
+        
             <div class="post">
                 <h2>{{ post.item_name }}</h2>
                 <p>{{ post.post_text }}</p>
@@ -36,7 +36,6 @@
                 <!-- 画像の表示 -->
                 <img src="{{post.image_path}}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;">
             </div>
-        {% endfor %}
     </div>
 
     <!-- フッター -->
