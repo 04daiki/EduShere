@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField, HiddenField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from models import User
 from flask_wtf.file import FileAllowed
@@ -47,3 +47,7 @@ class PostForm(FlaskForm):
     category = SelectField('カテゴリー', choices=category_choices, validators=[DataRequired()])
     genre = SelectField('分類', choices=genre_choices, validators=[DataRequired()])
     submit = SubmitField('投稿')
+
+class Requestform(FlaskForm):
+    userid = HiddenField('userid')
+    submit = SubmitField('リクエストを送信する',render_kw={"onclick": "return confirm('本当に送信しますか？');"})
