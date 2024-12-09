@@ -117,7 +117,14 @@ def post():
 
 @app.route('/detail/<int:post_id>')
 def show_detail(post_id):
-    return render_template('detail.html')
+    # 表示
+    post = Post.query.filter_by(post_id=post_id, status = 1).first()
+    
+    if not post:
+        flash('該当する投稿が見つかりません。')
+        return redirect(url_for('home'))
+    
+    return render_template('detail.html', name=current_user.username, post=post)
 
 if __name__ == '__main__':
     with app.app_context():
