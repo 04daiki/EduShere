@@ -11,7 +11,7 @@
     <form method="POST" action="" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <p>
-            {{ form.photo }}<br>
+            {{ form.photo(class="a") }}<br>
 
             {{ form.item_name.label }}
             {{ form.item_name }}<br>

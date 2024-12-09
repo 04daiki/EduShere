@@ -3,7 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User, Post
-from forms import LoginForm, RegistrationForm, PostForm
+from forms import LoginForm, RegistrationForm, PostForm, Requestform
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -115,8 +115,16 @@ def post():
     
     return render_template('post.html',form=form)
 
-@app.route('/detail/<int:post_id>')
+@app.route('/detail/<int:post_id>', methods=['GET', 'POST'])
 def show_detail(post_id):
+    
+    form = Requestform()
+    
+    #詳細ページにて送信ボタンが押された時
+    if form.validate_on_submit():
+        flash('リクエストが送信されました')
+        return redirect(url_for('home'))
+    
     # 表示
     post = Post.query.filter_by(post_id=post_id, status = 1).first()
     
@@ -124,7 +132,7 @@ def show_detail(post_id):
         flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
-    return render_template('detail.html', name=current_user.username, post=post)
+    return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=form)
 
 if __name__ == '__main__':
     with app.app_context():
