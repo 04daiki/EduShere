@@ -152,6 +152,7 @@ def post():
     return render_template('post.html',form=form)
 
 @app.route('/detail/<int:post_id>', methods=['GET', 'POST'])
+@login_required
 def show_detail(post_id):
     
     form = Requestform()
