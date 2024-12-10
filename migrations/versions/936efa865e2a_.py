@@ -21,10 +21,11 @@ def upgrade():
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=64), nullable=False),
+    sa.Column('email', sa.String(length=150), unique=True, nullable=False),  # email カラム追加
     sa.Column('password_hash', sa.String(length=128), nullable=False),
-    sa.Column('point', sa.Integer(), default = 3),
+    sa.Column('point', sa.Integer(), default=3),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('username')
+    sa.UniqueConstraint('username', name='uq_user_username')  # ユニーク制約に名前を追加
     )
     # ### end Alembic commands ###
 
