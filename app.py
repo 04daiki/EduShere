@@ -3,7 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User, Post
-from forms import LoginForm, RegistrationForm, PostForm, Requestform
+from forms import PostForm, Requestform
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -58,22 +58,13 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
     return render_template('home.html', name=current_user.username, posts=posts)
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login')
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.verify_password(form.password.data):
-            login_user(user)
-            return redirect(url_for('home.html'))
-        else:
-            flash(_('Login Unsuccessful. Please check email and password'), 'danger')
-    return render_template('login.html', form=form)
+    return render_template('login.html')
 
 @app.route('/login/google')
 def google_login():
@@ -104,12 +95,12 @@ def google_auth_callback():
         flash(f'Authentication failed: {error.description}', 'danger')
         return redirect(url_for('login'))
     
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     flash('ログアウトしました。')
-#     return redirect(url_for('login'))
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('ログアウトしました。')
+    return redirect(url_for('login'))
 
 # @app.route('/register', methods=['GET', 'POST'])
 # def register():
