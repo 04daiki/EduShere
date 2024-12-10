@@ -7,6 +7,13 @@ from forms import LoginForm, RegistrationForm, PostForm, Requestform
 import time
 from werkzeug.utils import secure_filename
 import os
+from authlib.integrations.flask_client import OAuth
+from authlib.integrations.base_client.errors import OAuthError
+from werkzeug.security import generate_password_hash
+from dotenv import load_dotenv
+
+# .env ファイルを読み込む
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -23,6 +30,17 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'mysecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = CONNECT_INFO
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['GOOGLE_CLIENT_ID'] = os.getenv('GOOGLE_CLIENT_ID')
+app.config['GOOGLE_CLIENT_SECRET'] = os.getenv('GOOGLE_CLIENT_SECRET')
+
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=app.config['GOOGLE_CLIENT_ID'],
+    client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+    client_kwargs={'scope': 'openid profile email'},
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
+)
 
 
 # Initialize extensions
@@ -40,7 +58,6 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    # return render_template('headerfooter.html', name=current_user.username)
 
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
@@ -50,33 +67,61 @@ def home():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.verify_password(form.password.data):
             login_user(user)
-            flash('ログインに成功しました。')
-            return redirect(url_for('home'))
+            return redirect(url_for('home.html'))
         else:
-            flash('ユーザー名またはパスワードが無効です。')
+            flash(_('Login Unsuccessful. Please check email and password'), 'danger')
     return render_template('login.html', form=form)
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('ログアウトしました。')
-    return redirect(url_for('login'))
+@app.route('/login/google')
+def google_login():
+    redirect_uri = url_for('google_auth_callback', _external=True)
+    return google.authorize_redirect(redirect_uri, prompt='select_account')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('ユーザー登録が完了しました。')
+@app.route('/auth/callback')
+def google_auth_callback():
+    try:
+        token = google.authorize_access_token()
+        resp = google.get('https://www.googleapis.com/oauth2/v1/userinfo', token=token)
+        user_info = resp.json()
+        email = user_info['email']
+
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            user = User(
+                email=email, 
+                username=user_info['name'],
+                password_hash=generate_password_hash('default_password')  
+            )
+            db.session.add(user)
+            db.session.commit()
+
+        login_user(user)
+        return redirect(url_for('home'))
+    except OAuthError as error:
+        flash(f'Authentication failed: {error.description}', 'danger')
         return redirect(url_for('login'))
-    return render_template('register.html', form=form)
+    
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     flash('ログアウトしました。')
+#     return redirect(url_for('login'))
+
+# @app.route('/register', methods=['GET', 'POST'])
+# def register():
+#     form = RegistrationForm()
+#     if form.validate_on_submit():
+#         user = User(username=form.username.data)
+#         user.set_password(form.password.data)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash('ユーザー登録が完了しました。')
+#         return redirect(url_for('login'))
+#     return render_template('register.html', form=form)
 
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
