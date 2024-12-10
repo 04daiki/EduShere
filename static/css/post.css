@@ -1,0 +1,149 @@
+/* 全体のリセット */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* body全体 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FFF;
+    overflow-x: hidden; /* 横スクロール防止 */
+}
+
+/* ヘッダー */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    background-color: #FFFCF3;
+    color: black;
+    border-bottom: 1px solid #808080;
+    position: fixed; /* 固定する */
+    top: 0; /* 上端に固定 */
+    width: 100%; /* 横幅を全体に広げる */
+    z-index: 1000; /* フッターや他の要素より前面に表示 */
+    height: 10vh;
+}
+
+header .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+header .header-title {
+    font-size: 5vh;
+    font-weight: bold;
+    margin-left: 10px;
+    line-height: 2; /* 行の高さを調整して中央に合わせる */
+}
+
+header .close-button {
+    font-size: 3em;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+/* メインコンテンツ */
+main {
+    margin-top: 10vh;  /* ヘッダーの高さ分の余白 */
+    margin-bottom: 10vh; /* フッターの高さ分の余白 */
+    padding: 10px;
+    width: 100%; /* 横幅を100%に固定 */
+}
+
+/* フォームグループ */
+.form-group {
+    margin-bottom: 20px;  /* フォーム要素の間隔を空ける */
+}
+
+/* フォーム要素のスタイル */
+.form-control {
+    width: 100%;  /* 横幅を100%に設定 */
+    padding: 12px;  /* 内側の余白 */
+    margin-top: 5px;  /* 上部の余白 */
+    font-size: 1.1em;  /* フォントサイズ */
+    border: 1px solid #ccc;  /* 枠線 */
+    border-radius: 5px;  /* 角丸 */
+    box-sizing: border-box;  /* paddingを含めたサイズ計算 */
+    border: 1.5px solid; /* 枠の色を青色に変更 */
+}
+
+/* フォーム要素にフォーカスがある時のスタイル */
+.form-control:focus {
+    border-color: #007BFF;  /* フォーカス時の枠線の色 */
+    outline: none;  /* 外枠のスタイルを無効化 */
+}
+
+textarea.form-control {
+    resize: none; /* サイズ変更を無効にする */
+    border: 1.5px solid; /* 枠の色を青色に変更 */
+}
+
+label{
+    font-weight: bold;
+}
+
+/* フッター */
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #FFFCF3;
+    border-top: 1px solid #808080;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 20px;
+    z-index: 1000;
+    height: 10vh;
+}
+
+footer .post-button {
+    width: 50vw;  /* 横幅を画面の50%に設定 */
+    height: 7vh;  /* 縦幅を画面の5%に設定 */
+    font-size: 4vh;
+    font-weight: bold;
+    background-color: #007BFF;
+    color: #FFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+footer .post-button:hover {
+    background-color: #0056b3;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    header, footer {
+        text-align: center;
+        height: 10vh;
+    }
+    header .header-title{
+        font-size: 4vh;
+        line-height: 3; /* 行の高さを調整して中央に合わせる */
+    }
+    header .logo, footer .tab {
+        margin: 5px 0;
+    }
+    footer .tab img{
+        width: 60px;
+        height: 60px;
+    }
+
+    footer .post-button {
+        width: 70vw;  /* 小さい画面ではボタン幅を70%に変更 */
+        height: 8vh;  /* 縦幅も少し大きくする */
+    }
+}
