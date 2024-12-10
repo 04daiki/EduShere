@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField, SelectField, FileFi
 
 
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
-from models import jjhser
+from models import User
 from flask_wtf.file import FileAllowed
 from wtforms import TextAreaField, validators
 
