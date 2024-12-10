@@ -3,33 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投稿画面</title>
-    <!-- <link href="../static/css/style2.css" rel="stylesheet"> -->
+    <title>EduShare投稿画面</title>
+    <link href="../static/css/post.css" rel="stylesheet">
 </head>
 <body>
     <h2>投稿</h2>
     <form method="POST" action="" enctype="multipart/form-data">
         {{ form.csrf_token }}
-        <p>
-            {{ form.photo }}<br>
+    <!-- ヘッダー -->
+    <header>
+        <div class="header-content">
+            <span class="header-title">教材を投稿</span>
+            <button class="close-button" onclick="window.history.back();">×</button>
+        </div>
+    </header>
 
-            {{ form.item_name.label }}
-            {{ form.item_name }}<br>
+    <main>
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.photo.label(class=photo) }}<label style="color: #FF5A2A;">［必須］</label><br>
+                {{ form.photo }}<br>
+            </div>
+    
+            <div class="form-group">
+                {{ form.item_name.label(class=item_name) }}<label style="color: #FF5A2A;">［必須］</label><br>
+                {{ form.item_name(class="form-control")}}<br>
+            </div>
+            <div class="form-group">
+                {{ form.post_text.label(class=post_text) }}<br>
+                {{ form.post_text(class="form-control")}}<br>
+            </div>
+    
+            <div class="form-group">
+                {{ form.category.label(class=category) }}<label style="color: #FF5A2A;">［必須］</label><br>
+                {{ form.category(class_="form-control") }}<br>
+            </div>
 
-            {{ form.category.label }}
-            {{ form.category }}<br>
+            <div class="form-group">
+                {{ form.Subject.label(class=Subject) }}<label style="color: #FF5A2A;">［必須］</label><br>
+                {{ form.Subject(class_="form-control") }}<br>
+            </div>
+    
+            <div class="form-group">
+                {{ form.genre.label(class=genre) }}<label style="color: #FF5A2A;">［必須］</label><br>
+                {{ form.genre(class_="form-control") }}<br>
+            </div>
+    
+            <div class="form-group">
+                {{ form.condition.label(class=conditon) }}<label style="color: #FF5A2A;">［必須］</label><br>
+                {{ form.condition(class_="form-control") }}<br>
+            </div>
+    </main>
+    
 
-            {{ form.genre.label }}
-            {{ form.genre }}<br>
-
-            {{ form.condition.label }}
-            {{ form.condition }}<br>
-
-            {{ form.post_text.label }}
-            {{ form.post_text }}<br>
-
-            {{ form.submit }}
-        </p>
-    </form>
+    <!-- フッター -->
+    <footer>
+        <button class="post-button" type="submit">投稿</button>
+    </footer>
 </body>
 </html>
