@@ -3,7 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User, Post
-from forms import LoginForm, RegistrationForm, PostForm
+from forms import LoginForm, RegistrationForm, PostForm, Requestform
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -43,7 +43,7 @@ def home():
     # return render_template('headerfooter.html', name=current_user.username)
 
     # 表示
-    posts = Post.query.order_by(Post.timestamps.desc()).all()
+    posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
     return render_template('home.html', name=current_user.username, posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -95,9 +95,12 @@ def post():
 
             # 保存パスを構築
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], new_filename)
-
+            
             # ファイルを保存
             file.save(file_path)
+            
+            #teplatesディレクトリからの相対パスに変換
+            file_path = "." + file_path
         
         post = Post(post_text = form.post_text.data, user_id = current_user.id, image_path=file_path, 
                     item_name=form.item_name.data, condition=form.condition.data, category=form.category.data, genre=form.genre.data, status=1)
@@ -111,7 +114,25 @@ def post():
     # GET時
     
     return render_template('post.html',form=form)
+
+@app.route('/detail/<int:post_id>', methods=['GET', 'POST'])
+def show_detail(post_id):
     
+    form = Requestform()
+    
+    #詳細ページにて送信ボタンが押された時
+    if form.validate_on_submit():
+        flash('リクエストが送信されました')
+        return redirect(url_for('home'))
+    
+    # 表示
+    post = Post.query.filter_by(post_id=post_id, status = 1).first()
+    
+    if not post:
+        flash('該当する投稿が見つかりません。')
+        return redirect(url_for('home'))
+    
+    return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=form)
 
 if __name__ == '__main__':
     with app.app_context():

@@ -104,3 +104,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#uploadフォルダ
+static/uploads/*
+!static/uploads/.gitkeep
+
