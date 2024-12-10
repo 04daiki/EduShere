@@ -102,17 +102,6 @@ def logout():
     flash('ログアウトしました。')
     return redirect(url_for('login'))
 
-# @app.route('/register', methods=['GET', 'POST'])
-# def register():
-#     form = RegistrationForm()
-#     if form.validate_on_submit():
-#         user = User(username=form.username.data)
-#         user.set_password(form.password.data)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash('ユーザー登録が完了しました。')
-#         return redirect(url_for('login'))
-#     return render_template('register.html', form=form)
 
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
