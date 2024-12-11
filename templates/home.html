@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>レスポンシブヘッダーとフッター</title>
+    <title>レスポンシブ画像ギャラリー</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ヘッダーとフッター用のカスタムCSS -->
     <link rel="stylesheet" href="../static/css/style2.css">
+    <style>
+        .post img {
+            width: 100%;
+            height: auto;
+            object-fit: cover; /* 画像をカード内で適切にフィットさせる */
+        }
+    </style>
 </head>
 <body>
-    
     <!-- ヘッダー -->
     <header>
         <div class="logo">
@@ -17,24 +26,67 @@
             <img src="../static/images/search.png">
         </div>
     </header>
-    <!-- メインコンテンツ (デモ用) -->
-    <main style="padding: 20px; margin-bottom: 60px;">
-        <h1>コンテンツエリア</h1>
-        <p>ここにメインコンテンツが入ります。</p>
+    <!-- ナビゲーションバーにプルダウンメニュー -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <!-- プルダウンメニュー -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            カテゴリー：
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">アクション1</a></li>
+                            <li><a class="dropdown-item" href="#">アクション2</a></li>
+                            <li><a class="dropdown-item" href="#">アクション3</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">別のアクション</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="container my-5">
+        <h1>投稿一覧</h1>
+        <!-- 画像ギャラリー -->
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-4 col-md-2 col-lg-2 mb-4">
+                <div class="card">
+                    <a href="{{ url_for('show_detail', post_id=post.post_id) }}">
+                        <img src="{{ post.image_path }}" class="card-img-top" alt="{{ post.item_name }}">
+                    </a>
+                    <div class="card-body text-center">
+                        <p class="card-text">#{{ post.category }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </main>
 
-    <!-- 表示 -->
-    <div class="posts">
-        {% for post in posts %}
-            <div class="post">
-                <!-- 画像の表示 -->
-                <p>#{{ post.category }}</p>
-                <a href="{{ url_for('show_detail', post_id=post.post_id)}}"><img src="{{post.image_path}}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;"></a>
-            </div>
-        {% endfor %}
-    </div>
-
-    <!-- フッター -->
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ドロップダウンメニューアイテムがクリックされた時
+    document.querySelectorAll('.dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(event) {
+            // クリックされたアイテムの data-content 属性の値を取得
+            var content = event.target.getAttribute('data-content');
+            
+            // コンテンツエリアに内容を表示
+            document.getElementById('content-area').textContent = content;
+        });
+    });
+</script>
+<!-- フッター -->
     <footer>
         <a href="/">
             <div class="tab">
@@ -59,6 +111,6 @@
             </div>
         </a>
     </footer>
+
 </body>
 </html>
-
