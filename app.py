@@ -61,9 +61,18 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
+    item_condition =[
+        "未開封",
+        "非常に良い",
+        "良い",
+        "傷あり",
+        "汚れあり",
+        "傷と汚れあり",
+        "ジャンク品"
+    ]
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
-    return render_template('home.html', name=current_user.username, posts=posts)
+    return render_template('home.html', name=current_user.username, posts=posts, item_condition=item_condition)
 
 @app.route('/login')
 def login():
