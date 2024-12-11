@@ -7,22 +7,6 @@ from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from models import User
 from flask_wtf.file import FileAllowed
 from wtforms import TextAreaField, validators
-
-# class LoginForm(FlaskForm):
-#     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-#     password = PasswordField('Password', validators=[DataRequired()])
-#     submit = SubmitField('Login')
-
-# class RegistrationForm(FlaskForm):
-#     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-#     password = PasswordField('Password', validators=[DataRequired()])
-#     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-#     submit = SubmitField('Register')
-
-#     def validate_username(self, username):
-#         user = User.query.filter_by(username=username.data).first()
-#         if user is not None:
-#             raise ValidationError('Please use a different username.')
         
 class PostForm(FlaskForm):
     
@@ -62,7 +46,7 @@ class PostForm(FlaskForm):
         ('4', 'その他'),
     ]
     
-    photo = FileField('画像を追加する')
+    photo = FileField('画像を追加する', validators=[DataRequired()])
     item_name = TextAreaField('教材名', validators=[DataRequired(), Length(min=1, max=50)],render_kw={"rows": 3, "cols": 50,"placeholder": "教材名を入力してください","maxlength": 50})
     post_text = TextAreaField('コメント',render_kw={"rows": 5, "cols": 50, "placeholder": "コメントを入力してください","maxlength": 150})
     condition = SelectField('商品状態', choices=condition_choices, validators=[DataRequired()])
@@ -73,4 +57,5 @@ class PostForm(FlaskForm):
 
 class Requestform(FlaskForm):
     userid = HiddenField('userid')
+    message = TextAreaField('リクエストメッセージ', validators=[DataRequired()], render_kw={"rows": 5, "cols": 50, "placeholder": "コメントを入力してください","maxlength": 150})
     submit = SubmitField('リクエストを送信する',render_kw={"onclick": "return confirm('本当に送信しますか？');"})

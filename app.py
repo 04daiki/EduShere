@@ -43,6 +43,9 @@ google = oauth.register(
 )
 
 
+
+
+
 # Initialize extensions
 db.init_app(app)
 migrate = Migrate(app, db)
