@@ -1,21 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
     <link href="../static/css/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Flask Login{% endblock %}</title>
 </head>
 <body>
-    <div>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-    </div>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="../static/images/logo.png">
+            </div>
+        </nav>
+    </header>    
+    <main>
+        <div class="container">
+            <!-- {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %} -->
+            {% block content %}{% endblock %}
+        </div>    
+    </main>
 </body>
 </html>

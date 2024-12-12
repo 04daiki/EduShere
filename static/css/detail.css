@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+/* ヘッダー */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #FFFCF3;
+    color: black;
+    border-bottom: 1px solid #808080;
+    position: fixed; /* 固定する */
+    top: 0; /* 上端に固定 */
+    width: 100%; /* 横幅を全体に広げる */
+    z-index: 1000;
+}
+header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    float: left;
+}
+header .icon, header .search {
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* メイン */
+main {
+    padding-top: 0; /* 初期値としてヘッダーの高さ分を確保 */
+    padding-bottom: 10vh; /* 初期値としてフッターの高さ分を確保 */
+}
+
+.navbar {
+    margin-bottom: 20px; /* ギャラリーとの間隔を調整 */
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 25vh; /* 必要に応じて調整 */
+}
+
+/* フッター */
+footer {
+    display: flex;
+    justify-content: center; /* 中央寄せ */
+    align-items: center;
+    padding: 10px 0;
+    background-color: #FFFCF3;
+    color: black;
+    border-top: 1px solid #808080;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+footer .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9em;
+    cursor: pointer;
+    margin: 0 10vh; /* ボタン同士の間隔 */
+}
+footer .tab img {
+    width: 40px;
+    height: 40px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    header, footer {
+        text-align: center;
+        height: 10vh;
+    }
+    footer{
+        justify-content: space-around;
+    }
+    header .logo, footer .tab {
+        margin: 5px 0;
+    }
+    footer .tab img{
+        width: 60px;
+        height: 60px;
+    }
+
+    .card-img-top {
+        height: 12vh; /* 必要に応じて調整 */
+    }
+}
