@@ -65,6 +65,7 @@
             </div>
         </nav>
         <!-- 画像ギャラリー -->
+
         <div class="container my-5">
             <div class="row d-flex">
                 <h1>投稿一覧</h1>
@@ -77,12 +78,11 @@
                         <div class="card-body text-center">
                             <p class="card-text">#{{ post.category }}</p>
                         </div>
-                    </div>
                 </div>
                 {% endfor %}
             </div>
             <!-- 該当項目がなかった場合 -->
-            <div id="myDiv"></div>            
+            <!-- <div id="myDiv"></div> -->            
 
         </div>
     </main>
@@ -193,7 +193,7 @@
                 <span>出品</span>
             </div>
         </a>
-        <a href="/">
+        <a href="/list">
             <div class="tab">
                 <img src="../static/images/list-icon_2.png" alt="リスト">
                 <span>リスト</span>

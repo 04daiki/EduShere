@@ -61,9 +61,18 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
+    item_condition =[
+        "未開封",
+        "非常に良い",
+        "良い",
+        "傷あり",
+        "汚れあり",
+        "傷と汚れあり",
+        "ジャンク品"
+    ]
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
-    return render_template('home.html', name=current_user.username, posts=posts)
+    return render_template('home.html', name=current_user.username, posts=posts, item_condition=item_condition)
 
 @app.route('/login')
 def login():
@@ -162,6 +171,12 @@ def show_detail(post_id):
         return redirect(url_for('home'))
     
     return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=form)
+
+@app.route('/list')
+@login_required
+def list():
+    posts = Post.query.filter(Post.user_id == current_user.id ).order_by(Post.timestamps.desc()).all()
+    return render_template('list.html', posts=posts)
 
 if __name__ == '__main__':
     with app.app_context():
