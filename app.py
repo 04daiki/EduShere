@@ -172,6 +172,12 @@ def show_detail(post_id):
     
     return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=form)
 
+@app.route('/list')
+@login_required
+def list():
+    posts = Post.query.filter(Post.user_id == current_user.id ).order_by(Post.timestamps.desc()).all()
+    return render_template('list.html', posts=posts)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
