@@ -14,7 +14,7 @@ header {
     position: fixed; /* 固定する */
     top: 0; /* 上端に固定 */
     width: 100%; /* 横幅を全体に広げる */
-    z-index: 1000; /* フッターや他の要素より前面に表示 */
+    z-index: 5000;
 }
 header .logo {
     font-size: 1.5em;
@@ -28,8 +28,17 @@ header .icon, header .search {
 
 /* メイン */
 main {
-    padding-top: 10vh; /* 初期値としてヘッダーの高さ分を確保 */
+    padding-top: 0; /* 初期値としてヘッダーの高さ分を確保 */
     padding-bottom: 10vh; /* 初期値としてフッターの高さ分を確保 */
+}
+
+.navbar {
+    margin-bottom: 20px; /* ギャラリーとの間隔を調整 */
+}
+
+.post .card-img-top {
+    object-fit: cover;
+    height: 25vh; /* 必要に応じて調整 */
 }
 
 /* フッター */
@@ -73,5 +82,19 @@ footer .tab img {
     footer .tab img{
         width: 60px;
         height: 60px;
+    }
+
+    .post .card-img-top {
+        height: 12vh; /* 必要に応じて調整 */
+    }
+}
+
+@media (max-width: 480px) {
+    #myDiv {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px; /* 高さを調整 */
     }
 }

@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
 {% block content %}
-    <h2>Login</h2>
+    <div class="icon">
+        <img src="../static/images/logo-icon.png">
+    </div>
+    <h2>ログイン</h2>
+    <p>EduShareを使用するには<br>kdアカウントでログインしてください</p>
     <a href="{{ url_for('google_login') }}">
-    Googleでログイン
+        <button type="submit" class="google-login-button">Googleでログイン</button>
     </a>
 {% endblock %}

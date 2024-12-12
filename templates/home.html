@@ -18,7 +18,7 @@
 </head>
 <body>
     <!-- ヘッダー -->
-    <header>
+    <header id="header">
         <div class="logo">
             <img src="../static/images/logo.png">
         </div>
@@ -26,67 +26,156 @@
             <img src="../static/images/search.png">
         </div>
     </header>
-    <!-- ナビゲーションバーにプルダウンメニュー -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <!-- プルダウンメニュー -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            カテゴリー：
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">アクション1</a></li>
-                            <li><a class="dropdown-item" href="#">アクション2</a></li>
-                            <li><a class="dropdown-item" href="#">アクション3</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">別のアクション</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
     <!-- メインコンテンツ -->
-    <main class="container my-5">
-        <h1>投稿一覧</h1>
-        <!-- 画像ギャラリー -->
-        <div class="row">
-            {% for post in posts %}
-            <div class="col-4 col-md-2 col-lg-2 mb-4">
-                <div class="card">
-                    <a href="{{ url_for('show_detail', post_id=post.post_id) }}">
-                        <img src="{{ post.image_path }}" class="card-img-top" alt="{{ post.item_name }}">
-                    </a>
-                    <div class="card-body text-center">
-                        <p class="card-text">#{{ item_condition[post.condition - 1] }}</p>
-                    </div>
+    <main id="main">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <!-- プルダウンメニュー -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                カテゴリー：<span id="selected-category">すべて</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
+                                <li><a class="dropdown-item" href="#" data-value="すべて">すべて</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="1">AI・IT・Iot・情報処理系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="2">ゲームプログラミング系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="3">アニメ制作・アニメーター・キャラクターデザイン系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="4">音・楽曲制作・音響効果・ゲームサウンド系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="5">建築・インテリアデザイン系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="6">ロボット制御・センサー・電子回路系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="7">eスポーツイベント企画・運営系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="8">声優・タレント・ナレーター・俳優系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="9">グラフィック・Webデザイン・動画系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="10">国際コミュニケーション系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="11">ビジネス・パソコン活用・事務・企画・営業販売系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="12">ゲームCG・3DCG映像作成系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="13">音響・照明・映像・レコーディング系</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="14">製品デザイン・機械設計・3次元CAD</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="15">日本語系</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            {% endfor %}
+        </nav>
+        <!-- 画像ギャラリー -->
+
+        <div class="container my-5">
+            <div class="row d-flex">
+                <h1>投稿一覧</h1>
+                {% for post in posts %}
+                <div class="col-4 col-md-2 col-lg-2 mb-4 post" data-category-id="{{ post.category }}">
+                    <div class="card">
+                        <a href="{{ url_for('show_detail', post_id=post.post_id) }}">
+                            <img src="{{ post.image_path }}" class="card-img-top" alt="{{ post.item_name }}">
+                        </a>
+                        <div class="card-body text-center">
+                            <p class="card-text">#{{ post.category }}</p>
+                        </div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- 該当項目がなかった場合 -->
+            <!-- <div id="myDiv"></div> -->            
+
         </div>
     </main>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // ドロップダウンメニューアイテムがクリックされた時
-    document.querySelectorAll('.dropdown-item').forEach(function(item) {
-        item.addEventListener('click', function(event) {
-            // クリックされたアイテムの data-content 属性の値を取得
-            var content = event.target.getAttribute('data-content');
-            
-            // コンテンツエリアに内容を表示
-            document.getElementById('content-area').textContent = content;
+    <script>
+        window.addEventListener('load', function() {
+            function adjustPadding() {
+                // ヘッダーの高さを取得
+                var headerHeight = document.getElementById('header').offsetHeight;
+
+                // メインコンテンツにヘッダーの高さ分の余白を設定
+                document.getElementById('main').style.paddingTop = headerHeight + 'px';
+            }
+
+            // 初回の読み込み時に実行
+            adjustPadding();
+
+            // ウィンドウのリサイズ時にも高さを再調整
+            window.addEventListener('resize', adjustPadding);
         });
-    });
-</script>
-<!-- フッター -->
+
+        window.addEventListener('DOMContentLoaded', function() {
+            // 現在の選択を表示する要素
+            const selectedCategory = document.getElementById('selected-category');
+
+            // すべてのドロップダウンアイテムを取得
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+            // ドロップダウンアイテムにクリックイベントを追加
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', function(event) {
+                    event.preventDefault(); // デフォルトのリンク動作を無効化
+                    // 選択された項目の値を取得
+                    const category = this.getAttribute('data-value');
+                    // 表示を更新
+                    selectedCategory.textContent = category;
+                });
+            });
+        });
+
+
+
+
+        window.addEventListener('DOMContentLoaded', function() {
+            // 現在の選択を表示する要素
+            const selectedCategory = document.getElementById('selected-category');
+
+            // すべての投稿要素を取得
+            const posts = document.querySelectorAll('.post');
+
+            // すべてのドロップダウンアイテムを取得
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+                        
+            // ドロップダウンアイテムにクリックイベントを追加
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', function(event) {
+                    event.preventDefault(); // デフォルトのリンク動作を無効化
+
+                    // 選択されたカテゴリIDを取得
+                    const categoryId = this.getAttribute('data-value');  // カテゴリID（1, 2, など）
+
+                    // 選択されたカテゴリ名を表示
+                    selectedCategory.textContent = this.textContent;
+
+                    //該当する項目はありませんをクリア
+                    // const myDiv = document.getElementById('myDiv');
+                    // myDiv.innerHTML = " ";   
+
+                    // フィルタリング処理
+                    posts.forEach(post => {
+                        const postCategoryId = post.getAttribute('data-category-id');  // 投稿のカテゴリID
+
+                        // カテゴリIDが一致する場合のみ表示、その他は非表示
+                        // 数字の比較を行うため、両方を整数に変換して比較
+                        if (categoryId === "すべて" || parseInt(categoryId) === parseInt(postCategoryId)) {
+                            post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
+                        } else {
+                            post.style.display = "none"; // 一致しない投稿は非表示
+                        }// 数字の比較を行うため、両方を整数に変換して比較
+                        if (categoryId === "すべて" || parseInt(categoryId) === parseInt(postCategoryId)) {
+                            post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
+                            myDiv.innerHTML = " ";   
+
+                        } else {
+                            post.style.display = "none"; // 一致しない投稿は非表示
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <!-- フッター -->
     <footer>
         <a href="/">
             <div class="tab">
@@ -112,5 +201,8 @@
         </a>
     </footer>
 
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
