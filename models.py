@@ -25,7 +25,11 @@ class User(db.Model, UserMixin):
     # posts = db.relationship('Post', back_populates = 'user', cascade)
     # posts = db.relationship('Post', backref='parent', cascade='all, delete-orphan')
     posts = db.relationship('Post', back_populates = 'user')
-    request = db.relationship('Request', back_populates = 'user')
+    request = db.relationship('Request', foreign_keys='Request.user_id', back_populates = 'user')
+    # request = db.relationship('Request', foreign_keys='Request.user_id', request2 = db.relationship('Request', foreign_keys='Request.recipient_id', back_populates = 'user'))
+    request2 = db.relationship('Request', foreign_keys='Request.recipient_id', back_populates = 'user2')
+    
+    # request2 = db.relationship('Request', foreign_keys='recipient_id' ,back_populates = "")
     
     
     
@@ -71,7 +75,8 @@ class Request(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'))  # 投稿ID
     recipient_id = db.Column(db.Integer,db.ForeignKey('user.id'))  # リクエストを受けとったユーザーID
     timestamps = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)) # リクエスト日'
-    user = db.relationship('User', back_populates = 'request')
+    user = db.relationship('User', foreign_keys=[user_id], back_populates = 'request')
+    user2 = db.relationship('User', foreign_keys=[recipient_id], back_populates = 'request2')
     posts = db.relationship('Post', back_populates = 'request')
     
     
