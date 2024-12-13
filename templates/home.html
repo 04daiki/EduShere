@@ -67,10 +67,10 @@
         <!-- 画像ギャラリー -->
 
         <div class="container my-5">
-            <div class="row d-flex">
+            <div class="row">
                 <h1>投稿一覧</h1>
                 {% for post in posts %}
-                <div class="col-4 col-md-2 col-lg-2 mb-4 post" data-category-id="{{ post.category }}">
+                <div class="col-4 col-md-3 col-lg-2 mb-4 post" data-category-id="{{ post.category }}">
                     <div class="card">
                         <a href="{{ url_for('show_detail', post_id=post.post_id) }}">
                             <img src="{{ post.image_path }}" class="card-img-top" alt="{{ post.item_name }}">
@@ -78,14 +78,21 @@
                         <div class="card-body text-center">
                             <p class="card-text">#{{ post.category }}</p>
                         </div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
-            <!-- 該当項目がなかった場合 -->
-            <!-- <div id="myDiv"></div> -->            
-
+            <!-- 該当する項目がない場合に表示されるメッセージ -->
+            <div id="no-results-message" class="text-center mt-4" style="display: none;">
+                <h3>該当する項目はありませんでした。</h3>
+            </div>
         </div>
     </main>
+
+
+
+
+
 
     <script>
         window.addEventListener('load', function() {
@@ -125,8 +132,9 @@
 
 
 
-
         window.addEventListener('DOMContentLoaded', function() {
+            const noResultsMessage = document.getElementById('no-results-message');
+
             // 現在の選択を表示する要素
             const selectedCategory = document.getElementById('selected-category');
 
@@ -135,7 +143,9 @@
 
             // すべてのドロップダウンアイテムを取得
             const dropdownItems = document.querySelectorAll('.dropdown-item');
-                        
+            
+            let hasResults = false; // 結果があるかを確認するフラグ
+
             // ドロップダウンアイテムにクリックイベントを追加
             dropdownItems.forEach(item => {
                 item.addEventListener('click', function(event) {
@@ -164,12 +174,17 @@
                         }// 数字の比較を行うため、両方を整数に変換して比較
                         if (categoryId === "すべて" || parseInt(categoryId) === parseInt(postCategoryId)) {
                             post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
-                            myDiv.innerHTML = " ";   
+                            hasResults = true; // 結果が見つかった
 
                         } else {
                             post.style.display = "none"; // 一致しない投稿は非表示
                         }
                     });
+                    if (hasResults) {
+                        noResultsMessage.style.display = 'none';
+                    } else {
+                        noResultsMessage.style.display = 'block';
+                    }
                 });
             });
         });
