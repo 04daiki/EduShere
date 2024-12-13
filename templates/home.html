@@ -56,7 +56,7 @@
                                 <li><a class="dropdown-item" href="#" data-value="11">ビジネス・パソコン活用・事務・企画・営業販売系</a></li>
                                 <li><a class="dropdown-item" href="#" data-value="12">ゲームCG・3DCG映像作成系</a></li>
                                 <li><a class="dropdown-item" href="#" data-value="13">音響・照明・映像・レコーディング系</a></li>
-                                <li><a class="dropdown-item" href="#" data-value="14">製品デザイン・機械設計・3次元CAD</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="14">製品デザイン・機械設計・3次元CAD系</a></li>
                                 <li><a class="dropdown-item" href="#" data-value="15">日本語系</a></li>
                             </ul>
                         </li>
@@ -69,14 +69,31 @@
         <div class="container my-5">
             <div class="row">
                 <h1>投稿一覧</h1>
+                {% set category_names = {
+                    1: "IT系",
+                    2: "ゲーム系",
+                    3: "アニメ系",
+                    4: "サウンド系",
+                    5: "建築系",
+                    6: "ロボット系",
+                    7: "eスポーツ系",
+                    8: "声優系",
+                    9: "グラフィック系",
+                    10: "国際コミュ系",
+                    11: "ビジネス系",
+                    12: "CG系",
+                    13: "音響系",
+                    14: "製品デザイン系",
+                    15: "日本語系"
+                } %}
                 {% for post in posts %}
                 <div class="col-4 col-md-3 col-lg-2 mb-4 post" data-category-id="{{ post.category }}">
                     <div class="card">
                         <a href="{{ url_for('show_detail', post_id=post.post_id) }}">
                             <img src="{{ post.image_path }}" class="card-img-top" alt="{{ post.item_name }}">
                         </a>
-                        <div class="card-body text-center">
-                            <p class="card-text">#{{ post.category }}</p>
+                        <div class="card-body">
+                            <p class="card-text"># <span class="tag" data-category-id="{{ post.category }}">{{ category_names[post.category] }}</span></p>
                         </div>
                     </div>
                 </div>
@@ -143,23 +160,50 @@
 
             // すべてのドロップダウンアイテムを取得
             const dropdownItems = document.querySelectorAll('.dropdown-item');
-            
-            let hasResults = false; // 結果があるかを確認するフラグ
+
+            const tags = document.querySelectorAll('.tag');
+
+            // タグのクリック処理
+            tags.forEach(tag => {
+                tag.addEventListener('click', function(event) {
+                    event.preventDefault(); // デフォルトのリンク動作を無効化
+
+                    const categoryId = this.getAttribute('data-category-id'); // タグに関連するカテゴリID
+                    selectedCategory.textContent = this.textContent; // 選択されたタグを表示
+
+                    // フィルタリング処理
+                    posts.forEach(post => {
+                        const postCategoryId = post.getAttribute('data-category-id'); // 投稿のカテゴリID
+
+                        // カテゴリIDが一致する場合のみ表示、その他は非表示
+                        if (categoryId === "すべて" || categoryId === postCategoryId) {
+                            post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
+                            hasResults = true; // 結果が見つかった
+                        } else {
+                            post.style.display = "none"; // 一致しない投稿は非表示
+                        }
+                    });
+
+                    if (hasResults) {
+                        noResultsMessage.style.display = 'none';
+                    } else {
+                        noResultsMessage.style.display = 'block';
+                    }
+                });
+            });
 
             // ドロップダウンアイテムにクリックイベントを追加
             dropdownItems.forEach(item => {
                 item.addEventListener('click', function(event) {
                     event.preventDefault(); // デフォルトのリンク動作を無効化
 
+                    let hasResults = false; // 結果があるかを確認するフラグ
+
                     // 選択されたカテゴリIDを取得
                     const categoryId = this.getAttribute('data-value');  // カテゴリID（1, 2, など）
 
                     // 選択されたカテゴリ名を表示
                     selectedCategory.textContent = this.textContent;
-
-                    //該当する項目はありませんをクリア
-                    // const myDiv = document.getElementById('myDiv');
-                    // myDiv.innerHTML = " ";   
 
                     // フィルタリング処理
                     posts.forEach(post => {

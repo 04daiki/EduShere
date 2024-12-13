@@ -41,6 +41,24 @@ main {
     object-fit: cover;
 }
 
+.card-body{
+    display: flex;
+    align-items: center;  /* 垂直方向の中央揃え */
+    justify-content: center;  /* 水平方向の中央揃え */
+    height: 100%;  /* 高さを確保して中央揃えが効くように */
+}
+
+.card-text{
+    font-size: 0.8rem;
+    color: #007bff;
+    white-space: nowrap;  /* 改行を防止 */
+}
+
+.card-text:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* フッター */
 footer {
     display: flex;
