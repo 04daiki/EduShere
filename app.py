@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, User, Post
+from models import db, User, Post, Request
 from forms import PostForm, Requestform, Deleteform 
 import time
 from werkzeug.utils import secure_filename
@@ -170,15 +170,25 @@ def show_detail(post_id):
         db.session.commit()
         flash('商品を削除しました')
         return redirect(url_for('home'))
-    elif rform.validate_on_submit():
-        flash('リクエストが送信されました')
-        return redirect(url_for('home'))
         
     if post.user_id == current_user.id:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
     else:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
     
+@app.route('/detail/request/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def request(post_id):
+    rform = Requestform()
+
+    if rform.validate_on_submit():
+        
+        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
+        
+        db.session.add(request)
+        db.session.commit()
+        flash('リクエストが送信されました')
+        return redirect(url_for('home'))
 
 @app.route('/list')
 @login_required
