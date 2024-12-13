@@ -205,6 +205,13 @@ def list():
     posts = Post.query.filter(Post.user_id == current_user.id ).order_by(Post.timestamps.desc()).all()
     return render_template('list.html', posts=posts, item_condition=item_condition)
 
+@app.route('/notification')
+@login_required
+def notification():
+    # requests = Request.query.filter(Request.recipient_id == current_user.id).order_by(Request.timestamps.desc()).all()
+    requests = Request.query.order_by(Request.timestamps.desc()).all()
+    return render_template('notification.html', requests=requests)
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
