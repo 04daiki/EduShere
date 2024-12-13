@@ -57,7 +57,7 @@ class PostForm(FlaskForm):
         ('4', 'その他'),
     ]
     
-    photo = FileField('画像を追加する', validators=[DataRequired()])
+    photo = FileField('画像を追加する', validators=[DataRequired(), FileAllowed(['png', 'jpg', 'jpeg'], '画像形式はPNG, JPG, JPEGのみです。')])
     item_name = TextAreaField('教材名', validators=[DataRequired(), Length(min=1, max=50)],render_kw={"rows": 3, "cols": 50,"placeholder": "教材名を入力してください","maxlength": 50})
     post_text = TextAreaField('コメント',render_kw={"rows": 5, "cols": 50, "placeholder": "コメントを入力してください","maxlength": 150})
     condition = SelectField('商品状態', choices=condition_choices, validators=[DataRequired()])
@@ -70,3 +70,6 @@ class Requestform(FlaskForm):
     userid = HiddenField('userid')
     message = TextAreaField('リクエストメッセージ', validators=[DataRequired()], render_kw={"rows": 5, "cols": 50, "placeholder": "コメントを入力してください","maxlength": 150})
     submit = SubmitField('リクエストを送信する',render_kw={"onclick": "return confirm('本当に送信しますか？');"})
+
+class Deleteform(FlaskForm):
+    submit = SubmitField('投稿を削除',render_kw={"onclick": "return confirm('本当に削除しますか？');"}) 
