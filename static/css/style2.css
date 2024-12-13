@@ -37,8 +37,8 @@ main {
 }
 
 .post .card-img-top {
-    object-fit: cover;
     height: 25vh; /* 必要に応じて調整 */
+    object-fit: cover;
 }
 
 /* フッター */
@@ -86,15 +86,5 @@ footer .tab img {
 
     .post .card-img-top {
         height: 12vh; /* 必要に応じて調整 */
-    }
-}
-
-@media (max-width: 480px) {
-    #myDiv {
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100px; /* 高さを調整 */
     }
 }
