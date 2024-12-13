@@ -156,32 +156,28 @@ def post():
 @login_required
 def show_detail(post_id):
     
-    dform = Deleteform()
-    rform = Requestform()
-    
-    if dform.validate_on_submit():
-        flash('商品を削除しました')
-        return redirect(url_for('home'))
-    elif rform.validate_on_submit():
-        flash('リクエストが送信されました')
-        return redirect(url_for('home'))
-    
     # クリックされた教材の行取得
     post = Post.query.filter_by(post_id=post_id, status = 1).first()
     if not post:
         flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
-    #詳細ページにて送信ボタンが押された時
+    dform = Deleteform()
+    rform = Requestform()
     
-    
+    if dform.validate_on_submit():
+        db.session.delete(post)
+        db.session.commit()
+        flash('商品を削除しました')
+        return redirect(url_for('home'))
+    elif rform.validate_on_submit():
+        flash('リクエストが送信されました')
+        return redirect(url_for('home'))
+        
     if post.user_id == current_user.id:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
     else:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
-    
-    
-
     
 
 @app.route('/list')
