@@ -3,7 +3,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User, Post
-from forms import PostForm, Requestform
+from forms import PostForm, Requestform, Deleteform 
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -22,7 +22,7 @@ UPLOAD_FOLDER = './static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # アップロード可能な拡張子
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
 # Configuration settings
 CONNECT_INFO = 'sqlite:///app.db'
@@ -156,27 +156,48 @@ def post():
 @login_required
 def show_detail(post_id):
     
-    form = Requestform()
+    dform = Deleteform()
+    rform = Requestform()
     
-    #詳細ページにて送信ボタンが押された時
-    if form.validate_on_submit():
+    if dform.validate_on_submit():
+        flash('商品を削除しました')
+        return redirect(url_for('home'))
+    elif rform.validate_on_submit():
         flash('リクエストが送信されました')
         return redirect(url_for('home'))
     
-    # 表示
+    # クリックされた教材の行取得
     post = Post.query.filter_by(post_id=post_id, status = 1).first()
-    
     if not post:
         flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
-    return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=form)
+    #詳細ページにて送信ボタンが押された時
+    
+    
+    if post.user_id == current_user.id:
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
+    else:
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
+    
+    
+
+    
 
 @app.route('/list')
 @login_required
 def list():
+    item_condition =[
+        "未開封",
+        "非常に良い",
+        "良い",
+        "傷あり",
+        "汚れあり",
+        "傷と汚れあり",
+        "ジャンク品"
+    ]
     posts = Post.query.filter(Post.user_id == current_user.id ).order_by(Post.timestamps.desc()).all()
-    return render_template('list.html', posts=posts)
+    return render_template('list.html', posts=posts, item_condition=item_condition)
 
 if __name__ == '__main__':
     with app.app_context():
