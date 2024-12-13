@@ -38,17 +38,20 @@
             <img src="{{post.image_path}}" alt="{{ post.item_name }}" style="max-width: 200px; max-height: 200px;">
         </div>   
     </div>
-    <form method="post" action="{{url_for('show_detail', post_id=post.post_id)}}">
-        {{ form.csrf_token }}
         <!-- 自分が投稿した教材かどうか -->
         {% if post.user_id != id %}
-            {{ form.userid(value=id) }}
+        <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
+        {{ form.csrf_token }}
+            {{ form.userid(value=post.post_id) }}
             {{ form.message }}
             {{ form.submit }}
+        </form>
         {% else %}
+        <form method="post" action="{{url_for('show_detail', post_id=post.post_id)}}">
+        {{ form.csrf_token }}
             {{form.submit}}
+        </form>
         {% endif %}
-    </form>
 </main>
 
     
