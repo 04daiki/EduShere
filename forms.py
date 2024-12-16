@@ -11,7 +11,7 @@ from wtforms import TextAreaField, validators
 class PostForm(FlaskForm):
     
     condition_choices = [
-        ('', '選択してください'),  # 初期値
+        ('', '選択してください'),
         ('1', '未開封'),
         ('2', '非常に良い'),
         ('3', '良い'),
@@ -22,7 +22,7 @@ class PostForm(FlaskForm):
     ]
     
     category_choices = [
-        ('', '選択してください'),  # 初期値
+        ('', '選択してください'),
         ('1', 'AI・IT・Iot・情報処理系'),
         ('2', 'ゲームプログラミング系'),
         ('3', 'アニメ制作・アニメーター・キャラクターデザイン系'),
@@ -41,7 +41,7 @@ class PostForm(FlaskForm):
     ]
         
     genre_choices = [
-        ('', '選択してください'),  # 初期値
+        ('', '選択してください'),
         ('1', '参考書'),
         ('2', '問題集'),
         ('3', '教科書'),
@@ -50,7 +50,7 @@ class PostForm(FlaskForm):
     ]
     
     subject_choices = [
-        ('', '選択してください'),  # 初期値
+        ('', '選択してください'),
         ('1', '国語'),
         ('2', '数学'),
         ('3', 'ドイツ語'),
@@ -60,10 +60,12 @@ class PostForm(FlaskForm):
     photo = FileField('画像を追加する', validators=[DataRequired(), FileAllowed(['png', 'jpg', 'jpeg'], '画像形式はPNG, JPG, JPEGのみです。')])
     item_name = TextAreaField('教材名', validators=[DataRequired(), Length(min=1, max=50)],render_kw={"rows": 3, "cols": 50,"placeholder": "教材名を入力してください","maxlength": 50})
     post_text = TextAreaField('コメント',render_kw={"rows": 5, "cols": 50, "placeholder": "コメントを入力してください","maxlength": 150})
-    condition = SelectField('商品状態', choices=condition_choices, validators=[DataRequired()])
-    category = SelectField('カテゴリー', choices=category_choices, validators=[DataRequired()])
-    genre = SelectField('分類', choices=genre_choices, validators=[DataRequired()])
-    Subject = SelectField('科目', choices=subject_choices, validators=[DataRequired()])
+    
+    condition = SelectField('商品状態', choices=condition_choices, validators=[DataRequired()], default='')
+    category = SelectField('カテゴリー', choices=category_choices, validators=[DataRequired()], default='')
+    genre = SelectField('分類', choices=genre_choices, validators=[DataRequired()], default='')
+    Subject = SelectField('科目', choices=subject_choices, validators=[DataRequired()], default='')
+
     submit = SubmitField('投稿')
 
 class Requestform(FlaskForm):

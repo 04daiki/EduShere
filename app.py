@@ -42,10 +42,6 @@ google = oauth.register(
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
 
-
-
-
-
 # Initialize extensions
 db.init_app(app)
 migrate = Migrate(app, db)
