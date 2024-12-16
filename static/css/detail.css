@@ -1,7 +1,16 @@
-body {
+/* 全体のリセット */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100%; /* ページ全体の高さを確保 */
+    overflow-y: auto; /* 縦スクロールを有効化 */
     font-family: Arial, sans-serif;
 }
+
 /* ヘッダー */
 header {
     display: flex;
@@ -14,31 +23,60 @@ header {
     position: fixed; /* 固定する */
     top: 0; /* 上端に固定 */
     width: 100%; /* 横幅を全体に広げる */
-    z-index: 1000;
+    z-index: 5000;
 }
+
 header .logo {
     font-size: 1.5em;
     font-weight: bold;
     float: left;
 }
-header .icon, header .search {
+
+header .icon, header {
     font-size: 1.2em;
+    cursor: pointer;
+}
+
+header .close-button {
+    position: absolute; /* ヘッダー内で絶対配置 */
+    right: 20px; /* 右端から20pxの位置 */
+    top: 50%; /* ヘッダーの中央に配置 */
+    transform: translateY(-50%); /* 縦方向の中央揃え */
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    color: black;
     cursor: pointer;
 }
 
 /* メイン */
 main {
-    padding-top: 0; /* 初期値としてヘッダーの高さ分を確保 */
+    margin-top: 90px; /* ヘッダーの高さ分 */
+    padding: 20px;
     padding-bottom: 10vh; /* 初期値としてフッターの高さ分を確保 */
 }
 
-.navbar {
-    margin-bottom: 20px; /* ギャラリーとの間隔を調整 */
+.section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fffaf0;
 }
 
-.card-img-top {
-    object-fit: cover;
-    height: 25vh; /* 必要に応じて調整 */
+.image img {
+    max-width: 100%; /* 画面幅に合わせてサイズを調整 */
+    width: 80%;
+    border-radius: 8px;
+    height: auto; /* 高さを自動調整 */
+    display: block; /* インライン要素をブロックにして余白をなくす */
+    margin: 0 auto; /* 中央揃え */
+    margin-bottom: 20px;
+}
+
+.name h1 {
+    font-weight: bold;
+    font-size: 30px;
 }
 
 /* フッター */
@@ -54,37 +92,82 @@ footer {
     bottom: 0;
     width: 100%;
 }
-footer .tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.9em;
+
+footer .post-button {
+    width: 50vw;  /* 横幅を画面の50%に設定 */
+    height: 7vh;  /* 縦幅を画面の7%に設定 */
+    font-size: 4vh;
+    font-weight: bold;
+    background-color: #007BFF;
+    color: #FFF;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    margin: 0 10vh; /* ボタン同士の間隔 */
-}
-footer .tab img {
-    width: 40px;
-    height: 40px;
 }
 
 /* レスポンシブ対応 */
+
+/* モバイル (スマホ) */
 @media (max-width: 480px) {
     header, footer {
         text-align: center;
         height: 10vh;
     }
-    footer{
+
+    .image img {
+        max-width: 100%; /* 画面幅に合わせてサイズを調整 */
+        width: 100%;
+        border-radius: 8px;
+        height: auto; /* 高さを自動調整 */
+        display: block; /* インライン要素をブロックにして余白をなくす */
+        margin: 0 auto; /* 中央揃え */
+        margin-bottom: 20px;
+    }
+
+    footer {
         justify-content: space-around;
     }
+
     header .logo, footer .tab {
         margin: 5px 0;
     }
-    footer .tab img{
-        width: 60px;
-        height: 60px;
+
+    footer .post-button {
+        width: 70vw;  /* 小さい画面ではボタン幅を70%に変更 */
+        height: 8vh;  /* 縦幅も少し大きくする */
     }
 
-    .card-img-top {
-        height: 12vh; /* 必要に応じて調整 */
+    main {
+        padding: 15px;
+        min-height: auto; /* 高さを自動にして可変に */
+        height: auto; /* コンテンツに合わせて高さを自動調整 */
+        padding-bottom: 10vh; /* フッターを十分に表示するための余白 */
+    }
+}
+
+/* PC (デスクトップ) */
+@media (min-width: 481px) {
+    .post {
+        display: flex; /* 横並びにする */
+        justify-content: space-between; /* 左右のスペースを均等にする */
+        align-items: flex-start; /* 上端で揃える */
+    }
+
+    /* 左側のコンテンツ */
+    .left-content {
+        flex: 0 0 45%; /* 左側を全体の40%に固定 */
+        margin-right: 20px; /* 右側との間に余白 */
+    }
+
+    /* 右側のコンテンツ */
+    .right-content {
+        flex: 1; /* 残りのスペースを埋める */
+        display: flex; /* 中のセクションを縦並びにする */
+        flex-direction: column; /* 縦方向に並べる */
+        gap: 10px; /* 各セクション間のスペース */
+    }
+
+    .image img {
+        width: 80%;
     }
 }

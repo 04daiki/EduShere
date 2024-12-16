@@ -69,4 +69,4 @@ class PostForm(FlaskForm):
 class Requestform(FlaskForm):
     userid = HiddenField('userid')
     message = TextAreaField('リクエストメッセージ', validators=[DataRequired()], render_kw={"rows": 5, "cols": 50, "placeholder": "コメントを入力してください","maxlength": 150})
-    submit = SubmitField('リクエストを送信する',render_kw={"onclick": "return confirm('本当に送信しますか？');"})
+    submit = SubmitField('リクエスト',render_kw={"onclick": "return confirm('本当に送信しますか？');"})
