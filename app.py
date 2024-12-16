@@ -68,7 +68,7 @@ def home():
     ]
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
-    return render_template('home.html', name=current_user.username, posts=posts, item_condition=item_condition)
+    return render_template('home.html', name=current_user.username, posts=posts, point = current_user.point, item_condition=item_condition)
 
 @app.route('/login')
 def login():
@@ -179,9 +179,14 @@ def request(post_id):
 
     if rform.validate_on_submit():
         
-        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
+        # 送信時にポイント-1
+        point = User.queryfilter_by(id=current_user.id).first()
+        point.point = point.point - 1
         
+        # リクエスト追加
+        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
         db.session.add(request)
+        
         db.session.commit()
         flash('リクエストが送信されました')
         return redirect(url_for('home'))
