@@ -55,7 +55,6 @@ header .close-button {
 
 /* メインコンテンツ */
 main {
-    margin-top: 10vh;  /* ヘッダーの高さ分の余白 */
     margin-bottom: 10vh; /* フッターの高さ分の余白 */
     padding: 10px;
     width: 100%; /* 横幅を100%に固定 */

@@ -151,17 +151,49 @@
 
         window.addEventListener('DOMContentLoaded', function() {
             const noResultsMessage = document.getElementById('no-results-message');
-
-            // 現在の選択を表示する要素
             const selectedCategory = document.getElementById('selected-category');
-
-            // すべての投稿要素を取得
             const posts = document.querySelectorAll('.post');
-
-            // すべてのドロップダウンアイテムを取得
             const dropdownItems = document.querySelectorAll('.dropdown-item');
-
             const tags = document.querySelectorAll('.tag');
+
+            const categoryNames = {
+                1: "AI・IT・Iot・情報処理系",
+                2: "ゲームプログラミング系",
+                3: "アニメ制作・アニメーター・キャラクターデザイン系",
+                4: "音・楽曲制作・音響効果・ゲームサウンド系",
+                5: "建築・インテリアデザイン系",
+                6: "ロボット制御・センサー・電子回路系",
+                7: "eスポーツイベント企画・運営系",
+                8: "声優・タレント・ナレーター・俳優系",
+                9: "グラフィック・Webデザイン・動画系",
+                10: "国際コミュニケーション系",
+                11: "ビジネス・パソコン活用・事務・企画・営業販売系",
+                12: "ゲームCG・3DCG映像作成系",
+                13: "音響・照明・映像・レコーディング系",
+                14: "製品デザイン・機械設計・3次元CAD系",
+                15: "日本語系"
+            };
+
+            // フィルタリング処理を関数化
+            function filterPosts(categoryId) {
+                let hasResults = false;
+                posts.forEach(post => {
+                    const postCategoryId = post.getAttribute('data-category-id');  // 投稿のカテゴリID
+                    // カテゴリIDが一致する場合のみ表示、その他は非表示
+                    if (categoryId === "すべて" || categoryId === postCategoryId) {
+                        post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
+                        hasResults = true;
+                    } else {
+                        post.style.display = "none"; // 一致しない投稿は非表示
+                    }
+                });
+                // 結果がない場合のメッセージ表示
+                if (hasResults) {
+                    noResultsMessage.style.display = 'none';
+                } else {
+                    noResultsMessage.style.display = 'block';
+                }
+            }
 
             // タグのクリック処理
             tags.forEach(tag => {
@@ -169,26 +201,9 @@
                     event.preventDefault(); // デフォルトのリンク動作を無効化
 
                     const categoryId = this.getAttribute('data-category-id'); // タグに関連するカテゴリID
-                    selectedCategory.textContent = this.textContent; // 選択されたタグを表示
+                    selectedCategory.textContent = categoryNames[categoryId] || "すべて"; // 選択されたカテゴリ名を表示
 
-                    // フィルタリング処理
-                    posts.forEach(post => {
-                        const postCategoryId = post.getAttribute('data-category-id'); // 投稿のカテゴリID
-
-                        // カテゴリIDが一致する場合のみ表示、その他は非表示
-                        if (categoryId === "すべて" || categoryId === postCategoryId) {
-                            post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
-                            hasResults = true; // 結果が見つかった
-                        } else {
-                            post.style.display = "none"; // 一致しない投稿は非表示
-                        }
-                    });
-
-                    if (hasResults) {
-                        noResultsMessage.style.display = 'none';
-                    } else {
-                        noResultsMessage.style.display = 'block';
-                    }
+                    filterPosts(categoryId);  // フィルタリング関数を呼び出す
                 });
             });
 
@@ -197,38 +212,10 @@
                 item.addEventListener('click', function(event) {
                     event.preventDefault(); // デフォルトのリンク動作を無効化
 
-                    let hasResults = false; // 結果があるかを確認するフラグ
-
-                    // 選択されたカテゴリIDを取得
                     const categoryId = this.getAttribute('data-value');  // カテゴリID（1, 2, など）
+                    selectedCategory.textContent = categoryNames[categoryId] || "すべて";  // カテゴリ名を表示
 
-                    // 選択されたカテゴリ名を表示
-                    selectedCategory.textContent = this.textContent;
-
-                    // フィルタリング処理
-                    posts.forEach(post => {
-                        const postCategoryId = post.getAttribute('data-category-id');  // 投稿のカテゴリID
-
-                        // カテゴリIDが一致する場合のみ表示、その他は非表示
-                        // 数字の比較を行うため、両方を整数に変換して比較
-                        if (categoryId === "すべて" || parseInt(categoryId) === parseInt(postCategoryId)) {
-                            post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
-                        } else {
-                            post.style.display = "none"; // 一致しない投稿は非表示
-                        }// 数字の比較を行うため、両方を整数に変換して比較
-                        if (categoryId === "すべて" || parseInt(categoryId) === parseInt(postCategoryId)) {
-                            post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
-                            hasResults = true; // 結果が見つかった
-
-                        } else {
-                            post.style.display = "none"; // 一致しない投稿は非表示
-                        }
-                    });
-                    if (hasResults) {
-                        noResultsMessage.style.display = 'none';
-                    } else {
-                        noResultsMessage.style.display = 'block';
-                    }
+                    filterPosts(categoryId);  // フィルタリング関数を呼び出す
                 });
             });
         });
