@@ -68,7 +68,7 @@ def home():
     ]
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
-    return render_template('home.html', name=current_user.username, posts=posts, item_condition=item_condition)
+    return render_template('home.html', name=current_user.username, posts=posts, point = current_user.point, item_condition=item_condition)
 
 @app.route('/login')
 def login():
@@ -161,7 +161,12 @@ def show_detail(post_id):
     dform = Deleteform()
     rform = Requestform()
     
+    #削除時の動作
     if dform.validate_on_submit():
+        #ポイントの払い戻し
+        # for request in post.request:
+        #     request.user.point = request.user.point + 1
+ 
         db.session.delete(post)
         db.session.commit()
         flash('商品を削除しました')
@@ -171,7 +176,8 @@ def show_detail(post_id):
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
     else:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
-    
+
+#リクエストボタンが押された時   
 @app.route('/detail/request/<int:post_id>', methods=['GET', 'POST'])
 @login_required
 def request(post_id):
@@ -179,9 +185,17 @@ def request(post_id):
 
     if rform.validate_on_submit():
         
-        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
+        # 送信時にポイント-1(リクエスト送信側)、ポイント+1(リクエスト送信側)
+        # sender = User.query.filter_by(id=current_user.id).first()
+        # sender.point = sender.point - 1
         
+        # receiver = Post.query.filter_by(post_id=post_id).first()
+        # receiver.user.point = receiver.user.point + 1
+        
+        # リクエスト追加
+        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
         db.session.add(request)
+        
         db.session.commit()
         flash('リクエストが送信されました')
         return redirect(url_for('home'))
