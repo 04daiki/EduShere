@@ -22,21 +22,9 @@
         <div class="logo">
             <img src="../static/images/logo.png">
         </div>
-        <div class="search">
-            <img src="../static/images/search.png">
-        </div>
     </header>
 
     <!-- メインコンテンツ -->
-     <!-- {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %} -->
     <main id="main">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
@@ -73,6 +61,14 @@
                 </div>
             </div>
         </nav>
+
+        <!-- 検索機能 -->
+        <div class="search">
+            <input type="text" id="search-box" class="form-control" placeholder="教材のタイトルを入力...">
+            <button id="search-button" class="btn btn-primary">検索</button>
+        </div>
+
+
         <!-- 画像ギャラリー -->
 
         <div class="container my-5">
@@ -96,7 +92,7 @@
                     15: "日本語系"
                 } %}
                 {% for post in posts %}
-                <div class="col-4 col-md-3 col-lg-2 mb-4 post" data-category-id="{{ post.category }}">
+                <div class="col-4 col-md-3 col-lg-2 mb-4 post" data-category-id="{{ post.category }}" data-title="{{ post.item_name }}">
                     <div class="card">
                         <a href="{{ url_for('show_detail', post_id=post.post_id) }}">
                             <img src="{{ post.image_path }}" class="card-img-top" alt="{{ post.item_name }}">
@@ -114,11 +110,6 @@
             </div>
         </div>
     </main>
-
-
-
-
-
 
     <script>
         window.addEventListener('load', function() {
@@ -138,32 +129,13 @@
         });
 
         window.addEventListener('DOMContentLoaded', function() {
-            // 現在の選択を表示する要素
-            const selectedCategory = document.getElementById('selected-category');
-
-            // すべてのドロップダウンアイテムを取得
-            const dropdownItems = document.querySelectorAll('.dropdown-item');
-
-            // ドロップダウンアイテムにクリックイベントを追加
-            dropdownItems.forEach(item => {
-                item.addEventListener('click', function(event) {
-                    event.preventDefault(); // デフォルトのリンク動作を無効化
-                    // 選択された項目の値を取得
-                    const category = this.getAttribute('data-value');
-                    // 表示を更新
-                    selectedCategory.textContent = category;
-                });
-            });
-        });
-
-
-
-        window.addEventListener('DOMContentLoaded', function() {
             const noResultsMessage = document.getElementById('no-results-message');
             const selectedCategory = document.getElementById('selected-category');
             const posts = document.querySelectorAll('.post');
             const dropdownItems = document.querySelectorAll('.dropdown-item');
             const tags = document.querySelectorAll('.tag');
+            const searchBox = document.getElementById('search-box');
+            const searchButton = document.getElementById('search-button');
 
             const categoryNames = {
                 1: "AI・IT・Iot・情報処理系",
@@ -184,18 +156,23 @@
             };
 
             // フィルタリング処理を関数化
-            function filterPosts(categoryId) {
+            function filterPosts(categoryId, searchQuery) {
                 let hasResults = false;
                 posts.forEach(post => {
-                    const postCategoryId = post.getAttribute('data-category-id');  // 投稿のカテゴリID
-                    // カテゴリIDが一致する場合のみ表示、その他は非表示
-                    if (categoryId === "すべて" || categoryId === postCategoryId) {
-                        post.style.display = "block"; // 一致するカテゴリIDの投稿を表示
+                    const postCategoryId = post.getAttribute('data-category-id');
+                    const postTitle = post.getAttribute('data-title');
+                    const matchesCategory = categoryId === "すべて" || categoryId === postCategoryId;
+                    const matchesSearch = !searchQuery || postTitle.includes(searchQuery);
+
+                    // カテゴリと検索条件の両方に一致する場合のみ表示
+                    if (matchesCategory && matchesSearch) {
+                        post.style.display = "block";
                         hasResults = true;
                     } else {
-                        post.style.display = "none"; // 一致しない投稿は非表示
+                        post.style.display = "none";
                     }
                 });
+
                 // 結果がない場合のメッセージ表示
                 if (hasResults) {
                     noResultsMessage.style.display = 'none';
@@ -209,10 +186,10 @@
                 tag.addEventListener('click', function(event) {
                     event.preventDefault(); // デフォルトのリンク動作を無効化
 
-                    const categoryId = this.getAttribute('data-category-id'); // タグに関連するカテゴリID
-                    selectedCategory.textContent = categoryNames[categoryId] || "すべて"; // 選択されたカテゴリ名を表示
+                    const categoryId = this.getAttribute('data-category-id');
+                    selectedCategory.textContent = categoryNames[categoryId] || "すべて";
 
-                    filterPosts(categoryId);  // フィルタリング関数を呼び出す
+                    filterPosts(categoryId, searchBox.value.trim()); // 現在の検索条件でフィルタリング
                 });
             });
 
@@ -221,11 +198,27 @@
                 item.addEventListener('click', function(event) {
                     event.preventDefault(); // デフォルトのリンク動作を無効化
 
-                    const categoryId = this.getAttribute('data-value');  // カテゴリID（1, 2, など）
-                    selectedCategory.textContent = categoryNames[categoryId] || "すべて";  // カテゴリ名を表示
+                    const categoryId = this.getAttribute('data-value');
+                    selectedCategory.textContent = categoryNames[categoryId] || "すべて";
 
-                    filterPosts(categoryId);  // フィルタリング関数を呼び出す
+                    filterPosts(categoryId, searchBox.value.trim()); // 現在の検索条件でフィルタリング
                 });
+            });
+
+            // 検索ボタンのクリック処理
+            searchButton.addEventListener('click', function() {
+                const searchQuery = searchBox.value.trim();
+                const selectedCategoryId = Object.keys(categoryNames).find(key => categoryNames[key] === selectedCategory.textContent) || "すべて";
+                filterPosts(selectedCategoryId, searchQuery);
+            });
+
+            // Enterキーでの検索処理
+            searchBox.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const searchQuery = searchBox.value.trim();
+                    const selectedCategoryId = Object.keys(categoryNames).find(key => categoryNames[key] === selectedCategory.textContent) || "すべて";
+                    filterPosts(selectedCategoryId, searchQuery);
+                }
             });
         });
     </script>
@@ -257,7 +250,6 @@
             </div>
         </a>
     </footer>
-
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
