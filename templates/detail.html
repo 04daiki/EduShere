@@ -41,7 +41,7 @@
                 <h5>教材の情報</h5>
                 <div class="condition section">
                     <p>カテゴリー: {{ post.category }}</p>
-                    <p>科目: {{ post.subject }}</p>
+                    <p>科目: {{ post.Subject }}</p>
                     <p>分類: {{ post.genre }}</p>
                     <p>商品状態: {{ post.condition }}</p>
                 </div>
@@ -52,12 +52,20 @@
     
     <!-- フッター -->
     <footer>
-        <form method="post" action="{{url_for('show_detail', post_id=0)}}">
+        <!-- 自分が投稿した教材かどうか -->
+        {% if post.user_id != id %}
+        <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
             {{ form.csrf_token }}
-            <!-- リクエスト送信ボタン -->
-            {{ form.userid(value=id) }}
+            {{ form.userid(value=post.post_id) }}
+            {{ form.message }}
             {{ form.submit(class="post-button")}}
         </form>
+        {% else %}
+        <form method="post" action="{{url_for('show_detail', post_id=post.post_id)}}">
+            {{ form.csrf_token }}
+            {{form.submit(class="delete-button")}}
+        </form>
+        {% endif %}
     </footer>
     
     <!-- Bootstrap JS -->

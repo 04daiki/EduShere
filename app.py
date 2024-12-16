@@ -2,8 +2,8 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, User, Post
-from forms import PostForm, Requestform
+from models import db, User, Post, Request
+from forms import PostForm, Requestform, Deleteform 
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -22,7 +22,7 @@ UPLOAD_FOLDER = './static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # アップロード可能な拡張子
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
 # Configuration settings
 CONNECT_INFO = 'sqlite:///app.db'
@@ -41,10 +41,6 @@ google = oauth.register(
     client_kwargs={'scope': 'openid profile email'},
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
-
-
-
-
 
 # Initialize extensions
 db.init_app(app)
@@ -72,7 +68,7 @@ def home():
     ]
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
-    return render_template('home.html', name=current_user.username, posts=posts, item_condition=item_condition)
+    return render_template('home.html', name=current_user.username, posts=posts, point = current_user.point, item_condition=item_condition)
 
 @app.route('/login')
 def login():
@@ -156,27 +152,75 @@ def post():
 @login_required
 def show_detail(post_id):
     
-    form = Requestform()
-    
-    #詳細ページにて送信ボタンが押された時
-    if form.validate_on_submit():
-        flash('リクエストが送信されました')
-        return redirect(url_for('home'))
-    
-    # 表示
+    # クリックされた教材の行取得
     post = Post.query.filter_by(post_id=post_id, status = 1).first()
-    
     if not post:
         flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
-    return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=form)
+    dform = Deleteform()
+    rform = Requestform()
+    
+    #削除時の動作
+    if dform.validate_on_submit():
+        #ポイントの払い戻し
+        # for request in post.request:
+        #     request.user.point = request.user.point + 1
+ 
+        db.session.delete(post)
+        db.session.commit()
+        flash('商品を削除しました')
+        return redirect(url_for('home'))
+        
+    if post.user_id == current_user.id:
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
+    else:
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
+
+#リクエストボタンが押された時   
+@app.route('/detail/request/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def request(post_id):
+    rform = Requestform()
+
+    if rform.validate_on_submit():
+        
+        # 送信時にポイント-1(リクエスト送信側)、ポイント+1(リクエスト送信側)
+        # sender = User.query.filter_by(id=current_user.id).first()
+        # sender.point = sender.point - 1
+        
+        # receiver = Post.query.filter_by(post_id=post_id).first()
+        # receiver.user.point = receiver.user.point + 1
+        
+        # リクエスト追加
+        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
+        db.session.add(request)
+        
+        db.session.commit()
+        flash('リクエストが送信されました')
+        return redirect(url_for('home'))
 
 @app.route('/list')
 @login_required
 def list():
+    item_condition =[
+        "未開封",
+        "非常に良い",
+        "良い",
+        "傷あり",
+        "汚れあり",
+        "傷と汚れあり",
+        "ジャンク品"
+    ]
     posts = Post.query.filter(Post.user_id == current_user.id ).order_by(Post.timestamps.desc()).all()
-    return render_template('list.html', posts=posts)
+    return render_template('list.html', posts=posts, item_condition=item_condition)
+
+@app.route('/notification')
+@login_required
+def notification():
+    # requests = Request.query.filter(Request.recipient_id == current_user.id).order_by(Request.timestamps.desc()).all()
+    requests = Request.query.order_by(Request.timestamps.desc()).all()
+    return render_template('notification.html', requests=requests)
 
 if __name__ == '__main__':
     with app.app_context():

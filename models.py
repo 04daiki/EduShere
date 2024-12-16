@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    point = db.Column(db.Integer, default=3)
     
     
     # posts = db.relationship('Post', back_populates = 'user', cascade)
@@ -75,6 +76,7 @@ class Request(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'))  # 投稿ID
     recipient_id = db.Column(db.Integer,db.ForeignKey('user.id'))  # リクエストを受けとったユーザーID
     timestamps = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)) # リクエスト日'
+    request_status = db.Column(db.Integer, default=1)
     user = db.relationship('User', foreign_keys=[user_id], back_populates = 'request')
     user2 = db.relationship('User', foreign_keys=[recipient_id], back_populates = 'request2')
     posts = db.relationship('Post', back_populates = 'request')

@@ -12,7 +12,7 @@
         {{ form.csrf_token }}
 
     <!-- ヘッダー -->
-    <header>
+    <header id="header">
         <div class="header-content">
             <span class="header-title">教材を投稿</span>
             <button class="close-button" onclick="window.history.back();">×</button>
@@ -20,12 +20,19 @@
     </header>
 
 
-    <main>
+    <main id="main">
         <form method="POST" action="">
             {{ form.csrf_token }}
             <div class="form-group">
                 {{ form.photo.label(class=photo) }}<label style="color: #FF5A2A;">［必須］</label><br>
                 {{ form.photo }}<br>
+                {% if form.photo.errors %}
+                <ul>
+                    {% for error in form.photo.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             </div>
     
             <div class="form-group">
@@ -37,27 +44,584 @@
                 {{ form.post_text(class="form-control")}}<br>
             </div>
     
+            <!-- カテゴリー -->
             <div class="form-group">
                 {{ form.category.label(class=category) }}<label style="color: #FF5A2A;">［必須］</label><br>
-                {{ form.category(class_="form-control") }}<br>
+                {{ form.category(class_="form-control", id="category") }}
             </div>
 
-            <div class="form-group">
+            <!-- 科目 -->
+            <div class="form-group" id="subject-field" style="display:none;">
                 {{ form.Subject.label(class=Subject) }}<label style="color: #FF5A2A;">［必須］</label><br>
-                {{ form.Subject(class_="form-control") }}<br>
+                {{ form.Subject(class_="form-control" , id="subject") }}<br>
             </div>
     
+            <!-- 分類 -->
             <div class="form-group">
                 {{ form.genre.label(class=genre) }}<label style="color: #FF5A2A;">［必須］</label><br>
                 {{ form.genre(class_="form-control") }}<br>
             </div>
     
+            <!-- 商品状態 -->
             <div class="form-group">
                 {{ form.condition.label(class=conditon) }}<label style="color: #FF5A2A;">［必須］</label><br>
                 {{ form.condition(class_="form-control") }}<br>
             </div>
     </main>
-    
+
+
+
+
+    <script>
+        window.addEventListener('load', function() {
+            function adjustPadding() {
+                // ヘッダーの高さを取得
+                var headerHeight = document.getElementById('header').offsetHeight;
+
+                // メインコンテンツにヘッダーの高さ分の余白を設定
+                document.getElementById('main').style.paddingTop = (headerHeight - 10) + 'px';
+            }
+
+            // 初回の読み込み時に実行
+            adjustPadding();
+
+            // ウィンドウのリサイズ時にも高さを再調整
+            window.addEventListener('resize', adjustPadding);
+        });
+
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const selects = document.querySelectorAll('select');
+
+            selects.forEach(select => {
+                const placeholderOption = select.querySelector('option[value=""]');
+                if (placeholderOption) {
+                    placeholderOption.style.display = 'none';
+                }
+            });
+        });
+
+
+
+        // ページ読み込み時に実行
+        window.onload = function() {
+            // categoryとSubjectフィールドを取得
+            const categoryField = document.getElementById('category');
+            const subjectField = document.getElementById('subject-field');
+            const subjectSelect = document.getElementById('subject'); // Subjectの選択肢を持つselectタグ
+
+            // カテゴリに対応する科目の選択肢
+            const subjects = {
+                '1': [
+                    { value: '1', label: '1年次:アルゴリズム' },
+                    { value: '2', label: '1年次:ＡＩリテラシー' },
+                    { value: '3', label: '1年次:処理演習' },
+                    { value: '4', label: '1年次:プログラム設計演習' },
+                    { value: '5', label: '1年次:ＩＣＴ概論' },
+                    { value: '6', label: '1年次:アプリケーション' },
+                    { value: '7', label: '1年次:Ｃ言語Ⅰ' },
+                    { value: '8', label: '1年次:プログラミングⅠ' },
+                    { value: '9', label: '1年次:ＩＣＴ特論' },
+                    { value: '10', label: '1年次:Ｃ言語Ⅱ' },
+                    { value: '11', label: '1年次:資格対策Ⅰ' },
+                    { value: '12', label: '1年次:就職対策' },
+                    { value: '13', label: '1年次:プログラミングⅡ' },
+                    { value: '14', label: '1年次:Ｗｅｂ開発' },
+                    { value: '15', label: '1年次:企画Ⅰ' },
+                    { value: '16', label: '1年次:制作演習' },
+                    { value: '17', label: '1年次:データリテラシ' },
+                    { value: '18', label: '1年次:デザイン' },
+                    { value: '19', label: '1年次:ＩｏＴ開発' },
+                    { value: '20', label: '1年次:サーバ・ネットワーク' },
+                    { value: '21', label: '1年次:ＡＩ概論' },
+                    { value: '22', label: '1年次:ロボット開発' },
+                    { value: '23', label: '2年次:キャリアデザイン' },
+                    { value: '24', label: '2年次:データベース技術' },
+                    { value: '25', label: '2年次:ネットワーク技術' },
+                    { value: '26', label: '2年次:資格対策Ⅱ' },
+                    { value: '27', label: '2年次:ドキュメント技法' },
+                    { value: '28', label: '2年次:プログラミングⅢ' },
+                    { value: '29', label: '2年次:ＬｉｎｕｘⅠ' },
+                    { value: '30', label: '2年次:ＩｏＴ基礎' },
+                    { value: '31', label: '2年次:制作演習Ⅰ' },
+                    { value: '32', label: '2年次:プログラミングⅣ' },
+                    { value: '33', label: '2年次:ＬｉｎｕｘⅡ' },
+                    { value: '34', label: '2年次:ＡＩ資格' },
+                    { value: '35', label: '2年次:Ｃ＃Ⅰ' },
+                    { value: '36', label: '2年次:ネットワーク構築Ⅰ' },
+                    { value: '37', label: '2年次:Ｃ＃Ⅱ' },
+                    { value: '38', label: '2年次:ネットワーク構築Ⅱ' },
+                    { value: '39', label: '3年次:制作演習Ⅱ' },
+                    { value: '40', label: '3年次:プロジェクト管理' },
+                    { value: '41', label: '3年次:ＩｏＴ演習' },
+                    { value: '42', label: '3年次:Ｗｅｂアプリケーション開発' },
+                    { value: '43', label: '3年次:システム設計Ⅰ' },
+                    { value: '44', label: '3年次:システム開発演習' },
+                    { value: '45', label: '3年次:システム設計Ⅱ' },
+                    { value: '46', label: '3年次:ＡＩ特論' },
+                    { value: '47', label: '3年次:アプリケーションサーバ構築Ⅰ' },
+                    { value: '48', label: '3年次:Ｗｅｂプログラミング' },
+                    { value: '49', label: '3年次:ＡＩ活用' },
+                    { value: '50', label: '3年次:システム設計特論Ⅰ' },
+                    { value: '51', label: '3年次:セキュリティ特論Ⅰ' },
+                    { value: '52', label: '3年次:アプリケーションサーバ構築Ⅱ' },
+                    { value: '53', label: '3年次:強化学習' },
+                    { value: '54', label: '3年次:システム設計特論Ⅱ' },
+                    { value: '55', label: '3年次:スマートフォンアプリ開発' },
+                    { value: '56', label: '3年次:セキュリティ特論Ⅱ' },
+                    { value: '57', label: '4年次:総合演習' },
+                    { value: '58', label: '4年次:総合演習ⅠＡ' },
+                    { value: '59', label: '4年次:総合演習ⅠＢ' },
+                    { value: '60', label: '4年次:総合演習ⅡＡ' },
+                    { value: '61', label: '4年次:総合演習ⅡＢ' },
+                    { value: '62', label: 'その他' }
+                ],
+                '2': [
+                    { value: '1', label: '1年次:ＩＴ基礎' },
+                    { value: '2', label: '1年次:Ｗｅｂデザイン基礎' },
+                    { value: '3', label: '1年次:ＡＩリテラシーⅠ' },
+                    { value: '4', label: '1年次:ＥｘｃｅｌＶＢＡ' },
+                    { value: '5', label: '1年次:キャリアデザインⅠ' },
+                    { value: '6', label: '1年次:ゲーム開発Ⅰ' },
+                    { value: '7', label: '1年次:Ｃ＋＋' },
+                    { value: '8', label: '1年次:２Ｄゲームプログラミング' },
+                    { value: '9', label: '2年次:ゲーム開発Ⅱ' },
+                    { value: '10', label: '2年次:Ｌｉｎｕｘ運用管理' },
+                    { value: '11', label: '2年次:ＩＴ応用' },
+                    { value: '12', label: '2年次:Ｗｅｂデザイン応用' },
+                    { value: '13', label: '2年次:ＡＩ活用基礎' },
+                    { value: '14', label: '2年次:ＸＲプログラミング' },
+                    { value: '15', label: '2年次:Ｏｆｆｉｃｅ活用' },
+                    { value: '16', label: '2年次:キャリア開発' },
+                    { value: '17', label: '2年次:キャリアデザインⅡ' },
+                    { value: '18', label: '2年次:ゲームアルゴリズム' },
+                    { value: '19', label: '2年次:数学' },
+                    { value: '20', label: '2年次:３ＤゲームプログラミングⅠ' },
+                    { value: '21', label: '2年次:データベース' },
+                    { value: '22', label: '2年次:デザインⅠ' },
+                    { value: '23', label: '2年次:Ｐｙｔｈｏｎ' },
+                    { value: '24', label: '2年次:ＰＧ＆ＩＴ演習' },
+                    { value: '25', label: '2年次:プログラミング演習' },
+                    { value: '26', label: '3年次:ＸＲプログラミング' },
+                    { value: '27', label: '3年次:ゲーム開発Ⅲ' },
+                    { value: '28', label: '3年次:ネットワーク' },
+                    { value: '29', label: '3年次:ＩＴ演習' },
+                    { value: '30', label: '3年次:ゲームエンジン' },
+                    { value: '31', label: '3年次:作品制作' },
+                    { value: '32', label: '3年次:３ＤゲームプログラミングⅡ' },
+                    { value: '33', label: '3年次:デザインⅡ' },
+                    { value: '34', label: '3年次:Ｐｙｔｈｏｎ演習' },
+                    { value: '35', label: '3年次:プロジェクト演習' },
+                    { value: '36', label: '4年次:ＸＲプログラミング演習' },
+                    { value: '37', label: '4年次:技術研究' },
+                    { value: '38', label: '4年次:ゲーム開発Ⅳ' },
+                    { value: '39', label: '4年次:ゲーム開発演習' },
+                    { value: '40', label: 'その他' }
+                ],
+                '3': [
+                    { value: '1', label: '1年次:アニメ基礎Ⅰ' },
+                    { value: '2', label: '1年次:アニメ制作Ⅰ' },
+                    { value: '3', label: '1年次:撮影Ⅰ' },
+                    { value: '4', label: '1年次:デッサンⅠ' },
+                    { value: '5', label: '1年次:動画Ⅰ' },
+                    { value: '6', label: '1年次:ペイントⅠ' },
+                    { value: '7', label: '2年次:アニメ基礎Ⅱ' },
+                    { value: '8', label: '2年次:アニメ制作Ⅱ' },
+                    { value: '9', label: '2年次:ＡＩリテラシー' },
+                    { value: '10', label: '2年次:デッサンⅡ' },
+                    { value: '11', label: '2年次:動画Ⅱ' },
+                    { value: '12', label: '2年次:動画Ⅲ' },
+                    { value: '13', label: '2年次:ペイントⅡ' },
+                    { value: '14', label: 'その他' }
+                ],
+                '4': [
+                    { value: '1', label: '1年次:ＡＩリテラシー' },
+                    { value: '2', label: '1年次:キャリアデザイン' },
+                    { value: '3', label: '1年次:シンセサイズ' },
+                    { value: '4', label: '1年次:聴能形成' },
+                    { value: '5', label: '1年次:ＤＡＷ演習Ａ' },
+                    { value: '6', label: '1年次:ＤＡＷ演習Ｂ' },
+                    { value: '7', label: '1年次:プレゼンテーションⅠ' },
+                    { value: '8', label: '1年次:音響効果Ａ' },
+                    { value: '9', label: '1年次:基礎演習' },
+                    { value: '10', label: '1年次:作編曲論' },
+                    { value: '11', label: '1年次:フォーリー演習' },
+                    { value: '12', label: '1年次:インターンシップ' },
+                    { value: '13', label: '1年次:ＰＣ演習' },
+                    { value: '14', label: '1年次:ミックスダウン演習' },
+                    { value: '15', label: '1年次:音響効果Ｂ' },
+                    { value: '16', label: '1年次:作編曲論応用' },
+                    { value: '17', label: '2年次:制作演習Ａ' },
+                    { value: '18', label: '2年次:制作演習Ｂ' },
+                    { value: '19', label: '2年次:プレゼンテーションⅡ' },
+                    { value: '20', label: '2年次:立体音響研究' },
+                    { value: '21', label: '2年次:インタラクティブサウンド' },
+                    { value: '22', label: '2年次:ＭＡ演習' },
+                    { value: '23', label: '2年次:クリエイティブワーク' },
+                    { value: '24', label: '2年次:コラボレーション' },
+                    { value: '25', label: '2年次:作編曲演習' },
+                    { value: '26', label: '2年次:商業音楽制作' },
+                    { value: '27', label: '2年次:整音技術' },
+                    { value: '28', label: '2年次:卒業制作' },
+                    { value: '29', label: '2年次:ソングライティング' },
+                    { value: '30', label: 'その他' }
+                ],
+                '5': [
+                    { value: '1', label: '1年次:建築ＣＧ' },
+                    { value: '2', label: '1年次:ＣＡＤ設計製図Ⅰ' },
+                    { value: '3', label: '1年次:ＡＩリテラシー' },
+                    { value: '4', label: '1年次:基礎製図' },
+                    { value: '5', label: '1年次:設計演習Ⅰ' },
+                    { value: '6', label: '1年次:建築計画Ⅰ' },
+                    { value: '7', label: '1年次:建築材料Ⅰ' },
+                    { value: '8', label: '1年次:建築一般構造' },
+                    { value: '9', label: '1年次:設計演習Ⅱ' },
+                    { value: '10', label: '1年次:建築法規Ⅰ' },
+                    { value: '11', label: '1年次:建築生産Ⅰ' },
+                    { value: '12', label: '1年次:構造力学Ⅰ' },
+                    { value: '13', label: '2年次:ＣＡＤ設計製図Ⅱ' },
+                    { value: '14', label: '2年次:設計演習Ⅲ' },
+                    { value: '15', label: '2年次:建築計画Ⅱ' },
+                    { value: '16', label: '2年次:建築計画Ⅲ' },
+                    { value: '17', label: '2年次:環境工学' },
+                    { value: '18', label: '2年次:建築設備' },
+                    { value: '19', label: '2年次:建築材料Ⅱ' },
+                    { value: '20', label: '2年次:建築法規Ⅱ' },
+                    { value: '21', label: '2年次:建築生産Ⅱ' },
+                    { value: '22', label: '2年次:構造力学Ⅱ' },
+                    { value: '23', label: '2年次:設計演習Ⅳ' },
+                    { value: '24', label: 'その他' }
+                ],
+                '6': [
+                    { value: "1", label: "1年次:アナログ設計" },
+                    { value: "2", label: "1年次:ＡＩリテラシー" },
+                    { value: "3", label: "1年次:基礎教養" },
+                    { value: "4", label: "1年次:センサ技術" },
+                    { value: "5", label: "1年次:ディジタル設計" },
+                    { value: "6", label: "1年次:電気数学" },
+                    { value: "7", label: "1年次:マイコン基礎" },
+                    { value: "8", label: "1年次:マイコン制御Ⅰ" },
+                    { value: "9", label: "1年次:ロボット制御基礎" },
+                    { value: "10", label: "2年次:ＨＤＬ" },
+                    { value: "11", label: "2年次:制御工学" },
+                    { value: "12", label: "2年次:製作演習" },
+                    { value: "13", label: "2年次:設計演習" },
+                    { value: "14", label: "2年次:マイコン制御Ⅱ" },
+                    { value: "15", label: "その他" }
+                ],
+                '7': [
+                    { value: "1", label: "1年次:esports企画運営Ⅰ" },
+                    { value: "2", label: "1年次:esports企画運営Ⅱ" },
+                    { value: "3", label: "1年次:映像演習" },
+                    { value: "4", label: "1年次:AIリテラシーⅠ" },
+                    { value: "5", label: "1年次:コンピュータリテラシーⅠ" },
+                    { value: "6", label: "2年次:esports企画運営Ⅲ" },
+                    { value: "7", label: "2年次:esports企画運営Ⅳ" },
+                    { value: "8", label: "2年次:イベント演習" },
+                    { value: "9", label: "その他" }
+                ],
+                '8': [
+                    { value: "1", label: "1年次:アフレコⅠ" },
+                    { value: "2", label: "1年次:イベント演習Ⅰ" },
+                    { value: "3", label: "1年次:ＡＩリテラシー" },
+                    { value: "4", label: "1年次:ＭＣ演習Ⅰ" },
+                    { value: "5", label: "1年次:演劇演習Ⅰ" },
+                    { value: "6", label: "1年次:ダンスⅠ" },
+                    { value: "7", label: "1年次:ＤＪ／ナレーションⅠ" },
+                    { value: "8", label: "1年次:ＰＣ演習Ⅰ" },
+                    { value: "9", label: "1年次:ヴォイストレーニングⅠ" },
+                    { value: "10", label: "1年次:ヴォーカルⅠ" },
+                    { value: "11", label: "1年次:基礎演習" },
+                    { value: "12", label: "1年次:キャリアデザイン" },
+                    { value: "13", label: "2年次:アフレコⅡ" },
+                    { value: "14", label: "2年次:イベント演習Ⅱ" },
+                    { value: "15", label: "2年次:ＭＣ演習Ⅱ" },
+                    { value: "16", label: "2年次:演劇演習Ⅱ" },
+                    { value: "17", label: "2年次:進路対策" },
+                    { value: "18", label: "2年次:ダンスⅡ" },
+                    { value: "19", label: "2年次:ＤＪ／ナレーションⅡ" },
+                    { value: "20", label: "2年次:ＰＣ演習Ⅱ" },
+                    { value: "21", label: "2年次:ヴォイストレーニングⅡ" },
+                    { value: "22", label: "2年次:ヴォーカルⅡ" },
+                    { value: "23", label: "その他" }
+                ],
+                '9': [
+                    { value: '1', label: '1年次:ＷｅｂコーディングⅠ' },
+                    { value: '2', label: '1年次:Ｗｅｂ作品制作Ⅰ' },
+                    { value: '3', label: '1年次:ＷｅｂデザインⅠ' },
+                    { value: '4', label: '1年次:ＷｅｂリテラシーⅠ' },
+                    { value: '5', label: '1年次:エディトリアルデザインⅠ' },
+                    { value: '6', label: '1年次:グラフィックデザインⅠ' },
+                    { value: '7', label: '1年次:情報デザインⅠ' },
+                    { value: '8', label: '1年次:タイポグラフィーⅠ' },
+                    { value: '9', label: '1年次:ＤＴＰ講義Ⅰ' },
+                    { value: '10', label: '1年次:デザイン演習Ⅰ' },
+                    { value: '11', label: '1年次:デザイン研究Ⅰ' },
+                    { value: '12', label: '1年次:ＷｅｂリテラシーⅡ' },
+                    { value: '13', label: '1年次:エディトリアルデザインⅡ' },
+                    { value: '14', label: '1年次:グラフィックデザインⅡ' },
+                    { value: '15', label: '1年次:ＤＴＰ講義Ⅱ' },
+                    { value: '16', label: '1年次:ＷｅｂコーディングⅡ' },
+                    { value: '17', label: '1年次:Ｗｅｂ作品制作Ⅱ' },
+                    { value: '18', label: '1年次:ＷｅｂデザインⅡ' },
+                    { value: '19', label: '1年次:広告デザインⅠ' },
+                    { value: '20', label: '1年次:情報デザインⅡ' },
+                    { value: '21', label: '1年次:タイポグラフィーⅡ' },
+                    { value: '22', label: '1年次:デザイン演習Ⅱ' },
+                    { value: '23', label: '1年次:デザイン研究Ⅱ' },
+                    { value: '24', label: '1年次:動画企画Ⅰ' },
+                    { value: '25', label: '1年次:動画作品制作Ⅰ' },
+                    { value: '26', label: '1年次:動画撮影Ⅰ' },
+                    { value: '27', label: '1年次:動画編集Ⅰ' },
+                    { value: '28', label: '1年次:ビジュアルデザインⅠ' },
+                    { value: '29', label: '2年次:ＡＩリテラシー' },
+                    { value: '30', label: '2年次:情報デザインⅢ' },
+                    { value: '31', label: '2年次:動画制作演習Ⅰ' },
+                    { value: '32', label: '2年次:卒業制作Ⅰ' },
+                    { value: '33', label: '2年次:ＷｅｂコーディングⅢ' },
+                    { value: '34', label: '2年次:Ｗｅｂ作品制作Ⅲ' },
+                    { value: '35', label: '2年次:ＷｅｂデザインⅢ' },
+                    { value: '36', label: '2年次:エディトリアルデザインⅢ' },
+                    { value: '37', label: '2年次:グラフィックデザインⅢ' },
+                    { value: '38', label: '2年次:広告デザインⅡ' },
+                    { value: '39', label: '2年次:作品制作Ⅰ' },
+                    { value: '40', label: '2年次:タイポグラフィーⅢ' },
+                    { value: '41', label: '2年次:ＤＴＰ講義Ⅲ' },
+                    { value: '42', label: '2年次:デザイン演習Ⅲ' },
+                    { value: '43', label: '2年次:動画企画Ⅱ' },
+                    { value: '44', label: '2年次:動画撮影Ⅱ' },
+                    { value: '45', label: '2年次:動画配信Ⅰ' },
+                    { value: '46', label: '2年次:動画編集Ⅱ' },
+                    { value: '47', label: '2年次:ビジュアルデザインⅡ' },
+                    { value: '48', label: '2年次:モーションタイポグラフィーⅠ' },
+                    { value: '49', label: '2年次:ＷｅｂコーディングⅣ' },
+                    { value: '50', label: '2年次:Ｗｅｂ作品制作Ⅳ' },
+                    { value: '51', label: '2年次:ＷｅｂデザインⅣ' },
+                    { value: '52', label: '2年次:Ｗｅｂデザイン基礎Ⅰ' },
+                    { value: '53', label: '2年次:ＷｅｂプログラミングⅠ' },
+                    { value: '54', label: '2年次:エディトリアルデザインⅣ' },
+                    { value: '55', label: '2年次:広告デザインⅢ' },
+                    { value: '56', label: '2年次:作品制作Ⅱ' },
+                    { value: '57', label: '2年次:情報デザインⅣ' },
+                    { value: '58', label: '2年次:タイポグラフィーⅣ' },
+                    { value: '59', label: '2年次:デザイン演習Ⅳ' },
+                    { value: '60', label: '2年次:動画企画Ⅲ' },
+                    { value: '61', label: '2年次:動画作品制作Ⅱ' },
+                    { value: '62', label: '2年次:動画撮影Ⅲ' },
+                    { value: '63', label: '2年次:動画配信Ⅱ' },
+                    { value: '64', label: '2年次:ビジュアルデザインⅢ' },
+                    { value: "65", label: "その他" }
+                ],
+                '10': [
+                    { value: '1', label: '1年次:キャリアデザインⅠ' },
+                    { value: '2', label: '1年次:コミュニケーション技法Ⅰ' },
+                    { value: '3', label: '1年次:コンピュータ演習Ⅰ' },
+                    { value: '4', label: '1年次:日本語能力試験対策Ⅰ' },
+                    { value: '5', label: '1年次:ビジネス演習Ⅰ' },
+                    { value: '6', label: '2年次:キャリアデザインⅡ' },
+                    { value: '7', label: '2年次:コミュニケーション技法Ⅱ' },
+                    { value: '8', label: '2年次:コンピュータ演習Ⅱ' },
+                    { value: '9', label: '2年次:日本語能力試験対策Ⅱ' },
+                    { value: '10', label: '2年次:ビジネス演習Ⅱ' },
+                    { value: "11", label: "その他" }
+                ],
+                '11': [
+                    { value: '1', label: '1年次:コミュニケーション技法' },
+                    { value: '2', label: '1年次:ビジネス・キャリア' },
+                    { value: '3', label: '1年次:アカウンティングⅠ' },
+                    { value: '4', label: '1年次:ＥＵＣ概論Ⅰ' },
+                    { value: '5', label: '1年次:コンピュータ・リテラシⅠ' },
+                    { value: '6', label: '1年次:データリテラシーⅠ' },
+                    { value: '7', label: '1年次:ＰＢＬ実践Ⅰ' },
+                    { value: '8', label: '1年次:ビジネスデザインⅠ' },
+                    { value: '9', label: '1年次:ビジネスマナーⅠ' },
+                    { value: '10', label: '1年次:プレゼンテーション演習Ⅰ' },
+                    { value: '11', label: '1年次:アカウンティングⅡ' },
+                    { value: '12', label: '1年次:ＥＵＣ概論Ⅱ' },
+                    { value: '13', label: '1年次:コンピュータ・リテラシⅡ' },
+                    { value: '14', label: '1年次:データリテラシーⅡ' },
+                    { value: '15', label: '1年次:ＰＢＬ実践Ⅱ' },
+                    { value: '16', label: '1年次:ビジネスデザインⅡ' },
+                    { value: '17', label: '1年次:ビジネスマナーⅡ' },
+                    { value: '18', label: '1年次:プレゼンテーション演習Ⅱ' },
+                    { value: '19', label: '2年次:ＡＩリテラシー' },
+                    { value: '20', label: '2年次:ビジネスコミュニケーション' },
+                    { value: '21', label: '2年次:ＩＣＴリテラシーⅠ' },
+                    { value: '22', label: '2年次:ＩＴビジネス概論Ⅰ' },
+                    { value: '23', label: '2年次:課題研究' },
+                    { value: '24', label: '2年次:コンピュータ実践Ⅰ' },
+                    { value: '25', label: '2年次:ビジネス実践Ⅰ' },
+                    { value: '26', label: '2年次:ビジネスプレゼンテーションⅠ' },
+                    { value: '27', label: '2年次:ＩＣＴリテラシーⅡ' },
+                    { value: '28', label: '2年次:ＩＴビジネス概論Ⅱ' },
+                    { value: '29', label: '2年次:コンピュータ実践Ⅱ' },
+                    { value: '30', label: '2年次:卒業制作' },
+                    { value: '31', label: '2年次:ビジネス実践Ⅱ' },
+                    { value: '32', label: '2年次:ビジネスプレゼンテーションⅡ' },
+                    { value: '33', label: 'その他' }
+                ],
+                '12': [
+                    { value: '1', label: '1年次:３ＤＣＧアニメーションⅠ' },
+                    { value: '2', label: '1年次:３ＤＣＧアニメーションⅡ' },
+                    { value: '3', label: '1年次:３ＤＣＧ概論' },
+                    { value: '4', label: '1年次:３ＤＣＧ質感設定' },
+                    { value: '5', label: '1年次:３ＤＣＧ総合演習' },
+                    { value: '6', label: '1年次:３ＤＣＧモデリングⅠ' },
+                    { value: '7', label: '1年次:デジタル制作' },
+                    { value: '8', label: '1年次:デッサンⅠ' },
+                    { value: '9', label: '1年次:編集技法Ⅰ' },
+                    { value: '10', label: '2年次:アナログアニメーション演習' },
+                    { value: '11', label: '2年次:ＡＩリテラシー' },
+                    { value: '12', label: '2年次:作品研究' },
+                    { value: '13', label: '2年次:３ＤＣＧ表現' },
+                    { value: '14', label: '2年次:３ＤＣＧモデリングⅡ' },
+                    { value: '15', label: '2年次:背景モデリング' },
+                    { value: '16', label: '2年次:編集技法Ⅱ' },
+                    { value: '17', label: '2年次:ポートフォリオ演習' },
+                    { value: '18', label: '2年次:ライティング演習' },
+                    { value: '19', label: 'その他' }
+                ],
+                '13': [
+                    { value: '1', label: '1年次:ＡＩリテラシー' },
+                    { value: '2', label: '1年次:ステージワークⅠ' },
+                    { value: '3', label: '1年次:電気工学' },
+                    { value: '4', label: '1年次:ＰＣ演習Ａ' },
+                    { value: '5', label: '1年次:ＰＣ演習Ｂ' },
+                    { value: '6', label: '1年次:ビジュアルワークⅠ' },
+                    { value: '7', label: '1年次:ライティングⅠ' },
+                    { value: '8', label: '1年次:基礎演習' },
+                    { value: '9', label: '1年次:舞台基礎' },
+                    { value: '10', label: '1年次:レコーディングⅠＡ' },
+                    { value: '11', label: '1年次:映像概論' },
+                    { value: '12', label: '1年次:キャリアデザインⅠ' },
+                    { value: '13', label: '1年次:制作演習Ⅰ' },
+                    { value: '14', label: '1年次:クリエイティブワークⅠ' },
+                    { value: '15', label: '1年次:レコーディングⅠＢ' },
+                    { value: '16', label: '2年次:イベント制作' },
+                    { value: '17', label: '2年次:映像演習' },
+                    { value: '18', label: '2年次:音楽研究' },
+                    { value: '19', label: '2年次:キャリアデザインⅡ' },
+                    { value: '20', label: '2年次:ＣＡＤ演習' },
+                    { value: '21', label: '2年次:制作演習Ⅱ' },
+                    { value: '22', label: '2年次:卒業制作' },
+                    { value: '23', label: '2年次:ＭＡ演習' },
+                    { value: '24', label: '2年次:クリエイティブワークⅡ' },
+                    { value: '25', label: '2年次:ステージワークⅡ' },
+                    { value: '26', label: '2年次:整音技術' },
+                    { value: '27', label: '2年次:レコーディングⅡ' },
+                    { value: '28', label: 'その他' }
+                ],
+                '14': [
+                    { value: '1', label: '1年次:機械設計Ⅰ' },
+                    { value: '2', label: '1年次:コンセプトワークⅠ' },
+                    { value: '3', label: '1年次:３次元ＣＡＤ設計Ⅰ' },
+                    { value: '4', label: '1年次:３次元ＣＡＤデザインⅠ' },
+                    { value: '5', label: '1年次:制作演習Ⅰ' },
+                    { value: '6', label: '1年次:製品企画Ⅰ' },
+                    { value: '7', label: '1年次:製品設計Ⅰ' },
+                    { value: '8', label: '1年次:プロダクトデザインⅠ' },
+                    { value: '9', label: '2年次:ＡＩリテラシー' },
+                    { value: '10', label: '2年次:機械設計Ⅱ' },
+                    { value: '11', label: '2年次:コンセプトワークⅡ' },
+                    { value: '12', label: '2年次:３次元ＣＡＤ設計Ⅱ' },
+                    { value: '13', label: '2年次:３次元ＣＡＤデザインⅡ' },
+                    { value: '14', label: '2年次:制作演習Ⅱ' },
+                    { value: '15', label: '2年次:製品企画Ⅱ' },
+                    { value: '16', label: '2年次:製品設計Ⅱ' },
+                    { value: '17', label: '2年次:プロダクトデザインⅡ' },
+                    { value: '18', label: 'その他' }
+                ],
+                '15': [
+                    { value: '1', label: '1年次:日本語初級聴解' },
+                    { value: '2', label: '1年次:日本語初級会話' },
+                    { value: '3', label: '1年次:日本語初級読解' },
+                    { value: '4', label: '1年次:日本語初級作文' },
+                    { value: '5', label: '1年次:日本語初級文法' },
+                    { value: '6', label: '1年次:日本語初級文字・語彙' },
+                    { value: '7', label: '1年次:日本語中級聴解' },
+                    { value: '8', label: '1年次:日本語中級会話' },
+                    { value: '9', label: '1年次:日本語中級読解' },
+                    { value: '10', label: '1年次:日本語中級作文' },
+                    { value: '11', label: '1年次:日本語中級文法' },
+                    { value: '12', label: '1年次:日本語中級文字・語彙' },
+                    { value: '13', label: '1年次:演習Ⅰ' },
+                    { value: '14', label: '2年次:日本語中級聴解' },
+                    { value: '15', label: '2年次:日本語中級会話' },
+                    { value: '16', label: '2年次:日本語中級読解' },
+                    { value: '17', label: '2年次:日本語中級作文' },
+                    { value: '18', label: '2年次:日本語中級文法' },
+                    { value: '19', label: '2年次:日本語中級文字・語彙' },
+                    { value: '20', label: '2年次:日本語上級Ⅰ聴解' },
+                    { value: '21', label: '2年次:日本語上級Ⅰ会話' },
+                    { value: '22', label: '2年次:日本語上級Ⅰ読解' },
+                    { value: '23', label: '2年次:日本語上級Ⅰ小論文' },
+                    { value: '24', label: '2年次:日本語上級Ⅰ文法' },
+                    { value: '25', label: '2年次:日本語上級Ⅰ文字・語彙' },
+                    { value: '26', label: '2年次:日本語上級Ⅱ聴解' },
+                    { value: '27', label: '2年次:日本語上級Ⅱ会話' },
+                    { value: '28', label: '2年次:日本語上級Ⅱ読解' },
+                    { value: '29', label: '2年次:日本語上級Ⅱ小論文' },
+                    { value: '30', label: '2年次:日本語上級Ⅱ文法' },
+                    { value: '31', label: '2年次:日本語上級Ⅱ文字・語彙' },
+                    { value: '32', label: '2年次:演習Ⅱ' },
+                    { value: "33", label: "その他" }
+                ],
+            };
+            
+            // categoryが選択されていない場合、Subjectを非表示にする
+            if (categoryField.value === "") {
+                subjectField.style.display = "none";
+            }
+
+            // categoryが変更された時にSubjectの表示を制御
+            categoryField.addEventListener('change', function() {
+                if (this.value !== "") {
+                    subjectField.style.display = "block"; // categoryが選択されたら表示
+                } else {
+                    subjectField.style.display = "none"; // categoryが選択されていなければ非表示
+                }
+            });
+
+            // 初期状態でcategoryが選択されている場合、Subjectの選択肢を更新
+            if (categoryField.value !== "") {
+                subjectField.style.display = "block"; // categoryが選択されている場合は表示
+                updateSubjectOptions(categoryField.value);
+            }
+
+            categoryField.addEventListener('change', function() {
+                if (this.value !== "") {
+                    subjectField.style.display = "block"; // categoryが選択されたら表示
+                    updateSubjectOptions(this.value); // 選択されたcategoryに基づいて科目を更新
+                } else {
+                    subjectField.style.display = "none"; // categoryが選択されていなければ非表示
+                }
+            });
+
+            // Subjectの選択肢を更新する関数
+            function updateSubjectOptions(categoryId) {
+                // 既存の選択肢を削除
+                subjectSelect.innerHTML = '<option value="">選択してください</option>';
+
+                // 新しい選択肢を追加
+                const subjectOptions = subjects[categoryId] || [];
+                subjectOptions.forEach(function(subject) {
+                    const option = document.createElement('option');
+                    option.value = subject.value;
+                    option.textContent = subject.label;
+                    subjectSelect.appendChild(option);
+                });
+
+                // 「選択してください」オプションを非表示にする
+                const placeholderOption = subjectSelect.querySelector('option[value=""]');
+                if (placeholderOption) {
+                    placeholderOption.style.display = 'none'; // 非表示にする
+                }
+            }
+        };
+    </script>
+
+
 
     <!-- フッター -->
     <footer>
