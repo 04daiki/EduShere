@@ -64,14 +64,26 @@ main {
     background-color: #fffaf0;
 }
 
+.image {
+    width: 45vw; /* 画像の表示幅 */
+    height: 45vw; /* 画像の表示高さ */
+    overflow: hidden; /* 枠外に画像がはみ出さないようにする */
+    border: 2px solid #ccc; /* 枠線 */
+    border-radius: 8px; /* 枠線の角を丸くする */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .image img {
     max-width: 100%; /* 画面幅に合わせてサイズを調整 */
-    width: 80%;
+    width: 90%;
     border-radius: 8px;
     height: auto; /* 高さを自動調整 */
     display: block; /* インライン要素をブロックにして余白をなくす */
     margin: 0 auto; /* 中央揃え */
     margin-bottom: 20px;
+    object-fit: cover; /* 画像が枠内に収まるように調整 */
 }
 
 .name h1 {
