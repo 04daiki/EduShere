@@ -32,6 +32,17 @@ main {
     padding-bottom: 10vh; /* 初期値としてフッターの高さ分を確保 */
 }
 
+/* 検索ボックス */
+.search {
+    width: 100%; /* コンテナ全体の幅を指定 */
+    justify-content: center; /* Flexbox内のアイテムを中央揃え */
+}
+#search-box {
+    width: 600px; /* デフォルトで画面の3分の1 */
+}
+#search-button{
+}
+
 .navbar {
     margin-bottom: 20px; /* ギャラリーとの間隔を調整 */
 }
@@ -104,5 +115,8 @@ footer .tab img {
 
     .post .card-img-top {
         height: 12vh; /* 必要に応じて調整 */
+    }
+    #search-box {
+        width: 80%; /* スマホ画面では70% */
     }
 }
