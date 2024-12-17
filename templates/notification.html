@@ -30,8 +30,9 @@
     <!-- メインコンテンツ -->
     <main id="main">
         {% for request in requests %}
-        <p>{{request.timestamps}}</p>
+        <img src="{{request.posts.image_path}}" alt="{{ request.posts.item_name }}">
         <p>{{request.posts.item_name}}</p>
+        <p>{{request.user_id}}からリクエストが届いています</p>
         {% endfor %}
     </main>
     <!-- {% with messages = get_flashed_messages() %}
