@@ -163,6 +163,7 @@ def show_detail(post_id):
     
     #削除時の動作
     if dform.validate_on_submit():
+        
         #ポイントの払い戻し
         # for request in post.request:
         #     request.user.point = request.user.point + 1
