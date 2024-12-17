@@ -40,8 +40,6 @@ main {
 #search-box {
     width: 600px; /* デフォルトで画面の3分の1 */
 }
-#search-button{
-}
 
 .navbar {
     margin-bottom: 20px; /* ギャラリーとの間隔を調整 */
