@@ -40,10 +40,10 @@
                 </div>
                 <h5>教材の情報</h5>
                 <div class="condition section">
-                    <p>カテゴリー: {{ post.category }}</p>
-                    <p>科目: {{ post.subject }}</p>
-                    <p>分類: {{ post.genre }}</p>
-                    <p>商品状態: {{ post.condition }}</p>
+                    <p>カテゴリー: {{ category[post.category][1] }}</p>
+                    <p>科目: {{ subject[post.subject][1] }}</p>
+                    <p>分類: {{ genre[post.genre][1] }}</p>
+                    <p>商品状態: {{ condition[post.condition][1] }}</p>
                 </div>
             </div>
         </div>

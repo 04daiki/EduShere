@@ -165,9 +165,11 @@ def show_detail(post_id):
         return redirect(url_for('home'))
         
     if post.user_id == current_user.id:
-        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform,
+                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices)
     else:
-        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform,
+                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices)
 
 #リクエストボタンが押された時   
 @app.route('/detail/request/<int:post_id>', methods=['GET', 'POST'])
