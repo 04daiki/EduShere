@@ -517,7 +517,12 @@
             {% endif %}
         </footer>
     {% else %}
-        
+    <form method="post" action="{{url_for('message', post_id=post.post_id)}}">
+        {{ form.csrf_token }}
+        {{ form.userid(value=id) }}
+        {{ form.message }}
+        {{ form.submit }}
+    </form>
     {% endif %}
     
     

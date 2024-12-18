@@ -2,8 +2,8 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, User, Post, Request
-from forms import PostForm, Requestform, Deleteform 
+from models import db, User, Post, Request, Message
+from forms import PostForm, Requestform, Deleteform, Messageform 
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -146,6 +146,10 @@ def show_detail(post_id):
     
     message_display = False
     
+    dform = Deleteform()
+    rform = Requestform()
+    mform = Messageform()
+    
     # クリックされた教材の行取得
     post = Post.query.filter_by(post_id=post_id).first()
     if not post:
@@ -156,12 +160,12 @@ def show_detail(post_id):
     if post.status == 0:
         #リクエストあるかどうか
         if post.request:
-            #メッセージ機能を使える人か
-            if post.request.user_id == current_user.id or post.request.recipient_id == current_user.id:
-                message_display = True
-                    
-    dform = Deleteform()
-    rform = Requestform()
+            for req in post.request:
+                #メッセージ機能を使える人か
+                if req.user_id == current_user.id or req.recipient_id == current_user.id:
+                    message_display = True
+                    return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=mform,
+                                    category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices, message_display=message_display) 
     
     #削除時の動作
     if dform.validate_on_submit():
@@ -209,6 +213,21 @@ def request(post_id):
         db.session.commit()
         flash('リクエストが送信されました')
         return redirect(url_for('home'))
+    
+@app.route('/detail/message/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def message(post_id):
+    mform = Messageform()
+    post = Post.query.filter_by(post_id=post_id).first()
+    
+    if mform.validate_on_submit():
+        for req in post.request:       
+            messages = Message(post_id=post_id, request_id=req.request_id, user_id=mform.userid.data, message=mform.message.data)
+        db.session.add(messages)
+        db.session.commit()
+        
+        return redirect(url_for('show_detail', post_id=post.post_id))
+    
 
 @app.route('/list')
 @login_required
