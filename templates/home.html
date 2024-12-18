@@ -154,16 +154,24 @@
                 15: "日本語系"
             };
 
-            // フィルタリング処理を関数化
+            // フィルタリング処理を更新
             function filterPosts(categoryId, searchQuery) {
                 let hasResults = false;
+
+                // 検索クエリを正規化
+                const normalizedSearchQuery = normalizeString(searchQuery);
+
                 posts.forEach(post => {
                     const postCategoryId = post.getAttribute('data-category-id');
                     const postTitle = post.getAttribute('data-title');
-                    const matchesCategory = categoryId === "すべて" || categoryId === postCategoryId;
-                    const matchesSearch = !searchQuery || postTitle.includes(searchQuery);
 
-                    // カテゴリと検索条件の両方に一致する場合のみ表示
+                    // 投稿タイトルを正規化
+                    const normalizedPostTitle = normalizeString(postTitle);
+
+                    // カテゴリ一致と検索条件一致を確認
+                    const matchesCategory = categoryId === "すべて" || categoryId === postCategoryId;
+                    const matchesSearch = !normalizedSearchQuery || normalizedPostTitle.includes(normalizedSearchQuery);
+
                     if (matchesCategory && matchesSearch) {
                         post.style.display = "block";
                         hasResults = true;
@@ -179,7 +187,7 @@
                     noResultsMessage.style.display = 'block';
                 }
             }
-
+            
             // タグのクリック処理
             tags.forEach(tag => {
                 tag.addEventListener('click', function(event) {
@@ -220,7 +228,15 @@
                 }
             });
         });
-    </script>
+
+    // 文字列を正規化する関数を追加
+    function normalizeString(str) {
+        return str
+            .toLowerCase() // 小文字化
+            .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)) // 全角英数字を半角に
+            .replace(/[\u30a1-\u30f6]/g, s => String.fromCharCode(s.charCodeAt(0) - 0x60)) // カタカナをひらがなに変換
+            .normalize('NFKC'); // Unicode正規化
+    }    </script>
 
     <!-- フッター -->
     <footer>
