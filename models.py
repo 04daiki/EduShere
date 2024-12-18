@@ -87,8 +87,8 @@ class Message(db.Model):
     
     id = db.Column(db.Integer, primary_key=True) #主キー
     post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'))
-    request_id = db.column(db.Integer, db.ForeignKey('requests.request_id'))
-    user_id = db.column(db.Integer, db.ForeignKey('user.id'))
+    request_id = db.Column(db.Integer, db.ForeignKey('requests.request_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     message = db.Column(db.String(200), nullable=False)
     timestamps = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     
