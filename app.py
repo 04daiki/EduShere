@@ -11,6 +11,7 @@ from authlib.integrations.flask_client import OAuth
 from authlib.integrations.base_client.errors import OAuthError
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
+from choices import *
 
 # .env ファイルを読み込む
 load_dotenv()
@@ -57,18 +58,9 @@ def load_user(user_id):
 @app.route('/')
 @login_required
 def home():
-    item_condition =[
-        "未開封",
-        "非常に良い",
-        "良い",
-        "傷あり",
-        "汚れあり",
-        "傷と汚れあり",
-        "ジャンク品"
-    ]
     # 表示
     posts = Post.query.filter(Post.status == 1).order_by(Post.timestamps.desc()).all()
-    return render_template('home.html', name=current_user.username, posts=posts, point = current_user.point, item_condition=item_condition)
+    return render_template('home.html', name=current_user.username, posts=posts, point = current_user.point, item_condition=condition_choices)
 
 @app.route('/login')
 def login():
@@ -136,7 +128,7 @@ def post():
             file_path = "." + file_path
         
         post = Post(post_text = form.post_text.data, user_id = current_user.id, image_path=file_path, 
-                    item_name=form.item_name.data, condition=form.condition.data, category=form.category.data, genre=form.genre.data, status=1)
+                    item_name=form.item_name.data, condition=form.condition.data, category=form.category.data, genre=form.genre.data, status=1, subject=form.Subject.data)
         
         db.session.add(post)
         db.session.commit()
@@ -163,6 +155,7 @@ def show_detail(post_id):
     
     #削除時の動作
     if dform.validate_on_submit():
+        
         #ポイントの払い戻し
         # for request in post.request:
         #     request.user.point = request.user.point + 1
@@ -173,9 +166,11 @@ def show_detail(post_id):
         return redirect(url_for('home'))
         
     if post.user_id == current_user.id:
-        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform)
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform,
+                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices)
     else:
-        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform)
+        return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform,
+                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices)
 
 #リクエストボタンが押された時   
 @app.route('/detail/request/<int:post_id>', methods=['GET', 'POST'])

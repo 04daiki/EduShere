@@ -57,6 +57,7 @@ class Post(db.Model):
     item_name = db.Column(db.String(50), nullable=False)  # 商品名
     condition = db.Column(db.Integer, nullable=False)  # 商品状態
     category = db.Column(db.Integer, nullable=False)  # カテゴリー
+    subject = db.Column(db.Integer)  # 教科
     genre = db.Column(db.Integer, nullable=False)  # 分類
     updatetime = db.Column(db.DateTime, nullable=True)  # 更新日
     status = db.Column(db.Integer, nullable=False)  # 取引状態
