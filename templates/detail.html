@@ -516,13 +516,23 @@
             </form>
             {% endif %}
         </footer>
+    <!-- メッセージ欄 -->
     {% else %}
-    <form method="post" action="{{url_for('message', post_id=post.post_id)}}">
-        {{ form.csrf_token }}
-        {{ form.userid(value=id) }}
-        {{ form.message }}
-        {{ form.submit }}
-    </form>
+        <form method="post" action="{{url_for('message', post_id=post.post_id)}}">
+            {{ form.csrf_token }}
+            {{ form.userid(value=id) }}
+            {{ form.message }}
+            {{ form.submit }}
+        </form>
+        <!-- メッセージ表示 -->
+        {% for message in messages %}
+            <!-- メッセージ送信者区別 -->
+            {% if message.user_id == id %}
+                <p>{{ message.message }} <br> {{ name }}- {{ message.timestamps }} </p><br>
+            {% else %}
+                <p>{{ message.message }} <br> {{ post.user.username}}- {{ message.timestamps }} </p><br>
+            {% endif %}
+        {% endfor %}
     {% endif %}
     
     
