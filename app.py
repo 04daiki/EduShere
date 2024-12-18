@@ -144,12 +144,22 @@ def post():
 @login_required
 def show_detail(post_id):
     
+    message_display = False
+    
     # クリックされた教材の行取得
-    post = Post.query.filter_by(post_id=post_id, status = 1).first()
+    post = Post.query.filter_by(post_id=post_id).first()
     if not post:
         flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
+    # リクエストが承認された教材かどうか
+    if post.status == 0:
+        #リクエストあるかどうか
+        if post.request:
+            #メッセージ機能を使える人か
+            if post.request.user_id == current_user.id or post.request.recipient_id == current_user.id:
+                message_display = True
+                    
     dform = Deleteform()
     rform = Requestform()
     
@@ -178,6 +188,7 @@ def show_detail(post_id):
 def request(post_id):
     rform = Requestform()
 
+    
     if rform.validate_on_submit():
         
         # 送信時にポイント-1(リクエスト送信側)、ポイント+1(リクエスト送信側)
@@ -190,6 +201,10 @@ def request(post_id):
         # リクエスト追加
         request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
         db.session.add(request)
+        
+        #取引成立フラグ、ホームに表示されないように
+        post = Post.query.filter_by(post_id=post_id, status = 1).first()
+        post.status = 0
         
         db.session.commit()
         flash('リクエストが送信されました')
