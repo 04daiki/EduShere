@@ -51,7 +51,7 @@ header .close-button {
 
 /* メイン */
 main {
-    margin-top: 90px; /* ヘッダーの高さ分 */
+    margin-top: 80px; /* ヘッダーの高さ分 */
     padding: 20px;
     padding-bottom: 10vh; /* 初期値としてフッターの高さ分を確保 */
 }
@@ -65,8 +65,8 @@ main {
 }
 
 .image {
-    width: 45vw; /* 画像の表示幅 */
-    height: 45vw; /* 画像の表示高さ */
+    width: 40vw; /* 画像の表示幅 */
+    height: 40vw; /* 画像の表示高さ */
     overflow: hidden; /* 枠外に画像がはみ出さないようにする */
     border: 2px solid #ccc; /* 枠線 */
     border-radius: 8px; /* 枠線の角を丸くする */
@@ -77,7 +77,7 @@ main {
 
 .image img {
     max-width: 100%; /* 画面幅に合わせてサイズを調整 */
-    width: 90%;
+    width: 80%;
     border-radius: 8px;
     height: auto; /* 高さを自動調整 */
     display: block; /* インライン要素をブロックにして余白をなくす */

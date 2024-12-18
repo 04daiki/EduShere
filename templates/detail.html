@@ -487,10 +487,8 @@
                 <h5>教材の情報</h5>
                 <div class="condition section">
                     {% set category = post['category'] | string %}
-                    {% set subject = post['Subject'] | string %}
+                    {% set subject = post['subject'] | string %}
                     <p>カテゴリー： {{ category_map.get(post['category'] | string, '不明') }}</p>
-                    <p>カテゴリー: {{ category }}</p>
-                    <p>科目: {{ subject }}</p>
                     <p>科目： {{ subject_map.get(category, {}).get(subject, "不明") }}</p>
                     <p>分類： {{ genre_map.get(post['genre'] | string, '不明') }}</p>
                     <p>商品状態： {{ condition_map.get(post['condition'] | string, '不明') }}</p>
