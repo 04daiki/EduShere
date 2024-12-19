@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import or_
 from flask_migrate import Migrate
 from models import db, User, Post, Request, Message
 from forms import PostForm, Requestform, Deleteform, Messageform 
@@ -248,8 +249,12 @@ def list():
 @app.route('/notification')
 @login_required
 def notification():
-    # requests = Request.query.filter(Request.recipient_id == current_user.id).order_by(Request.timestamps.desc()).all()
-    requests = Request.query.order_by(Request.timestamps.desc()).all()
+    requests = Request.query.filter(
+        or_(
+            Request.recipient_id == current_user.id,
+            Request.user_id == current_user.id
+        )
+    ).order_by(Request.timestamps.desc()).all()
     return render_template('notification.html', requests=requests, current_user=current_user.id)
 
 if __name__ == '__main__':
