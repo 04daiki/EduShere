@@ -250,7 +250,7 @@ def list():
 def notification():
     # requests = Request.query.filter(Request.recipient_id == current_user.id).order_by(Request.timestamps.desc()).all()
     requests = Request.query.order_by(Request.timestamps.desc()).all()
-    return render_template('notification.html', requests=requests)
+    return render_template('notification.html', requests=requests, current_user=current_user.id)
 
 if __name__ == '__main__':
     with app.app_context():

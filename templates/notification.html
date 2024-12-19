@@ -30,10 +30,19 @@
     <!-- メインコンテンツ -->
     <main id="main">
         {% for request in requests %}
-        <img src="{{request.posts.image_path}}" alt="{{ request.posts.item_name }}">
-        <p>{{request.posts.item_name}}</p>
-        <p>{{request.user_id}}からリクエストが届いています</p>
-        <a href="{{url_for('show_detail', post_id=request.posts.post_id)}}">連絡を取る</a>
+            <!-- 投稿したポストにリクエストが来た場合 -->
+            {% if request.recipient_id == current_user %}
+                <img src="{{request.posts.image_path}}" alt="{{ request.posts.item_name }}">
+                <p>{{request.posts.item_name}}</p>
+                <p>{{request.user_id}}からリクエストが届いています</p>
+                <a href="{{url_for('show_detail', post_id=request.posts.post_id)}}">連絡を取る</a>
+            <!-- リクエスト送信者かつリクエストが承認 -->
+            {% else %}
+                <img src="{{request.posts.image_path}}" alt="{{ request.posts.item_name }}">
+                <p>{{request.posts.item_name}}</p>
+                <p>送信したリクエストが承認されました</p>
+                <a href="{{url_for('show_detail', post_id=request.posts.post_id)}}">連絡を取る</a>
+            {% endif %}
         {% endfor %}
     </main>
     <!-- {% with messages = get_flashed_messages() %}
