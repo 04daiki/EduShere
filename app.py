@@ -172,9 +172,10 @@ def show_detail(post_id):
     #削除時の動作
     if dform.validate_on_submit():
         
-        #ポイントの払い戻し
-        # for request in post.request:
-        #     request.user.point = request.user.point + 1
+        # ポイントの払い戻し
+        if post.requet:
+            for request in post.request:
+                request.user.point = request.user.point + 1
  
         db.session.delete(post)
         db.session.commit()
@@ -198,11 +199,16 @@ def request(post_id):
     if rform.validate_on_submit():
         
         # 送信時にポイント-1(リクエスト送信側)、ポイント+1(リクエスト送信側)
-        # sender = User.query.filter_by(id=current_user.id).first()
-        # sender.point = sender.point - 1
+        sender = User.query.filter_by(id=current_user.id).first()
+        if sender.point >= 1:
+            sender.point = sender.point - 1
+        else:
+            flash("ポイントがありません")
+            return redirect(url_for('home'))
+                
         
-        # receiver = Post.query.filter_by(post_id=post_id).first()
-        # receiver.user.point = receiver.user.point + 1
+        receiver = Post.query.filter_by(post_id=post_id).first()
+        receiver.user.point = receiver.user.point + 1
         
         # リクエスト追加
         request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
