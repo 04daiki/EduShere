@@ -526,12 +526,7 @@
         </form>
         <!-- メッセージ表示 -->
         {% for message in messages %}
-            <!-- メッセージ送信者区別 -->
-            {% if message.user_id == id %}
-                <p>{{ message.message }} <br> {{ name }}- {{ message.timestamps }} </p><br>
-            {% else %}
-                <p>{{ message.message }} <br> {{ post.user.username}}- {{ message.timestamps }} </p><br>
-            {% endif %}
+            <p>{{ message.message }} <br> {{ message.user.username }} - {{ message.timestamps }} </p><br>
         {% endfor %}
     {% endif %}
     
