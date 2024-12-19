@@ -167,7 +167,7 @@ def show_detail(post_id):
                     message_display = True
                     messages = Message.query.filter_by(post_id = post_id).order_by(Message.timestamps.desc()).all()
                     return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=mform,
-                                    category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices, message_display=message_display,messages=messages) 
+                                    category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices, message_display=message_display,messages=messages, point=current_user.point) 
     
     #削除時の動作
     if dform.validate_on_submit():
