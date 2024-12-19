@@ -465,6 +465,7 @@
     {% set genre_map = {"1": "参考書", "2": "問題集", "3": "教科書", "4": "機材", "5": "その他"} %}
     {% set condition_map = {"1": "未開封", "2": "非常に良い", "3": "良い", "4": "傷あり", "5": "汚れあり", "6": "傷と汚れあり", "7": "ジャンク品"} %}
     <main>
+        <p>保有ポイント：{{ point }}</p>
         <div class="back">
         </div>
         <!-- 表示 -->
@@ -498,23 +499,38 @@
     </main>
 
     
-    <!-- フッター -->
-    <footer>
-        <!-- 自分が投稿した教材かどうか -->
-        {% if post.user_id != id %}
-        <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
+    {% if message_display == False %}
+        <!-- フッター -->
+        <footer> 
+            <!-- 自分が投稿した教材かどうか -->
+            {% if post.user_id != id %}
+            <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
+                {{ form.csrf_token }}
+                {{ form.userid(value=post.post_id) }}
+                {{ form.message }}
+                {{ form.submit(class="post-button")}}
+            </form>
+            {% else %}
+            <form method="post" action="{{url_for('show_detail', post_id=post.post_id)}}">
+                {{ form.csrf_token }}
+                {{form.submit(class="delete-button")}}
+            </form>
+            {% endif %}
+        </footer>
+    <!-- メッセージ欄 -->
+    {% else %}
+        <form method="post" action="{{url_for('message', post_id=post.post_id)}}">
             {{ form.csrf_token }}
-            {{ form.userid(value=post.post_id) }}
+            {{ form.userid(value=id) }}
             {{ form.message }}
-            {{ form.submit(class="post-button")}}
+            {{ form.submit }}
         </form>
-        {% else %}
-        <form method="post" action="{{url_for('show_detail', post_id=post.post_id)}}">
-            {{ form.csrf_token }}
-            {{form.submit(class="delete-button")}}
-        </form>
-        {% endif %}
-    </footer>
+        <!-- メッセージ表示 -->
+        {% for message in messages %}
+            <p>{{ message.message }} <br> {{ message.user.username }} - {{ message.timestamps }} </p><br>
+        {% endfor %}
+    {% endif %}
+    
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>

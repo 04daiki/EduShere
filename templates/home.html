@@ -69,9 +69,13 @@
         </div>
 
         <!-- 画像ギャラリー -->
-
-        <div class="container my-5">
             <div class="row">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {{ messages[0] }}
+                    {% endif %}
+                {% endwith %}
+                <p>保有ポイント：{{ point }}</p>
                 <h1>投稿一覧</h1>
                 {% set category_names = {
                     1: "IT系",

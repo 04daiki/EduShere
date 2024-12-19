@@ -26,3 +26,8 @@ class Requestform(FlaskForm):
 
 class Deleteform(FlaskForm):
     submit = SubmitField('投稿を削除',render_kw={"onclick": "return confirm('本当に削除しますか？');"}) 
+    
+class Messageform(FlaskForm):
+    userid = HiddenField('userid')
+    message = TextAreaField('送信メッセージ', validators=[DataRequired()], render_kw={"placeholder": "メッセージを入力してください", "maxlength":200})
+    submit = SubmitField("送信")

@@ -2,8 +2,8 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, User, Post, Request
-from forms import PostForm, Requestform, Deleteform 
+from models import db, User, Post, Request, Message
+from forms import PostForm, Requestform, Deleteform, Messageform 
 import time
 from werkzeug.utils import secure_filename
 import os
@@ -144,14 +144,29 @@ def post():
 @login_required
 def show_detail(post_id):
     
+    message_display = False
+    
+    dform = Deleteform()
+    rform = Requestform()
+    mform = Messageform()
+    
     # クリックされた教材の行取得
-    post = Post.query.filter_by(post_id=post_id, status = 1).first()
+    post = Post.query.filter_by(post_id=post_id).first()
     if not post:
         flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
-    dform = Deleteform()
-    rform = Requestform()
+    # リクエストが承認された教材かどうか
+    if post.status == 0:
+        #リクエストあるかどうか
+        if post.request:
+            for req in post.request:
+                #メッセージ機能を使える人か
+                if req.user_id == current_user.id or req.recipient_id == current_user.id:
+                    message_display = True
+                    messages = Message.query.filter_by(post_id = post_id).order_by(Message.timestamps.desc()).all()
+                    return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=mform,
+                                    category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices, message_display=message_display,messages=messages) 
     
     #削除時の動作
     if dform.validate_on_submit():
@@ -167,10 +182,10 @@ def show_detail(post_id):
         
     if post.user_id == current_user.id:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=dform,
-                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices)
+                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices, message_display=message_display, point=current_user.point)
     else:
         return render_template('detail.html', name=current_user.username, id=current_user.id, post=post, form=rform,
-                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices)
+                                category=category_choices, subject=subject_choices, genre=genre_choices, condition=condition_choices, message_display=message_display, point=current_user.point)
 
 #リクエストボタンが押された時   
 @app.route('/detail/request/<int:post_id>', methods=['GET', 'POST'])
@@ -178,6 +193,7 @@ def show_detail(post_id):
 def request(post_id):
     rform = Requestform()
 
+    
     if rform.validate_on_submit():
         
         # 送信時にポイント-1(リクエスト送信側)、ポイント+1(リクエスト送信側)
@@ -191,9 +207,28 @@ def request(post_id):
         request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
         db.session.add(request)
         
+        #取引成立フラグ、ホームに表示されないように
+        post = Post.query.filter_by(post_id=post_id, status = 1).first()
+        post.status = 0
+        
         db.session.commit()
         flash('リクエストが送信されました')
         return redirect(url_for('home'))
+    
+@app.route('/detail/message/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def message(post_id):
+    mform = Messageform()
+    post = Post.query.filter_by(post_id=post_id).first()
+    
+    if mform.validate_on_submit():
+        for req in post.request:       
+            messages = Message(post_id=post_id, request_id=req.request_id, user_id=mform.userid.data, message=mform.message.data)
+        db.session.add(messages)
+        db.session.commit()
+        
+        return redirect(url_for('show_detail', post_id=post.post_id))
+    
 
 @app.route('/list')
 @login_required
@@ -215,7 +250,7 @@ def list():
 def notification():
     # requests = Request.query.filter(Request.recipient_id == current_user.id).order_by(Request.timestamps.desc()).all()
     requests = Request.query.order_by(Request.timestamps.desc()).all()
-    return render_template('notification.html', requests=requests)
+    return render_template('notification.html', requests=requests, current_user=current_user.id)
 
 if __name__ == '__main__':
     with app.app_context():
