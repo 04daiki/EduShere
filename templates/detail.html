@@ -506,7 +506,7 @@
             {% if post.user_id != id %}
             <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
                 {{ form.csrf_token }}
-                {{ form.userid(value=post.post_id) }}
+                {{ form.userid(value=post.user_id) }}
                 {{ form.message }}
                 {{ form.submit(class="post-button")}}
             </form>

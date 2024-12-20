@@ -32,6 +32,7 @@
                 <img src="{{request.posts.image_path}}" alt="{{ request.posts.item_name }}">
                 <p>{{request.posts.item_name}}</p>
                 <p>{{request.user.username}}からリクエストが届いています</p>
+                <p>メッセージ："{{request.request_text}}"</p>
                 <a href="{{url_for('show_detail', post_id=request.posts.post_id)}}">連絡を取る</a>
             <!-- リクエスト送信者かつリクエストが承認 -->
             {% else %}
