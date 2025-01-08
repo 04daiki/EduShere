@@ -94,6 +94,10 @@ footer .tab img {
     height: 40px;
 }
 
+.home-text{
+    padding-bottom: 1vh;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 480px) {
     header, footer {
