@@ -26,9 +26,10 @@
 
     <!-- メインコンテンツ -->
     <main id="main">
-        <h1>お知らせ</h1>
+        <h1 class="title-text">お知らせ</h1>
+        {% for request in requests %}
         <div class="notification-container">
-            {% for request in requests %}
+            <a href="{{ url_for('show_detail', post_id=request.posts.post_id) }}" class="notification-link">
                 <div class="notification-card">
                     <img src="{{ request.posts.image_path }}" alt="{{ request.posts.item_name }}" class="notification-img">
                     <div class="notification-content">
@@ -39,10 +40,11 @@
                             <p class="notification-text">リクエストが承認されました</p>
                         {% endif %}
                     </div>
-                    <a href="{{ url_for('show_detail', post_id=request.posts.post_id) }}" class="notification-link">チャット画面へ</a>
+                    <p class="change-chat">チャット画面へ</p>
                 </div>
-            {% endfor %}
+            </a>
         </div>
+        {% endfor %}
     </main>
         <!-- {% with messages = get_flashed_messages() %}
                 {% if messages %}
