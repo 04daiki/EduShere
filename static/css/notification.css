@@ -14,7 +14,7 @@ header {
     position: fixed; /* 固定する */
     top: 0; /* 上端に固定 */
     width: 100%; /* 横幅を全体に広げる */
-    z-index: 5000;
+    z-index: 9999;
 }
 header .logo {
     font-size: 1.5em;
@@ -94,6 +94,10 @@ footer .tab img {
     }
     .notification-link {
         align-self: flex-end;
+    }
+    main {
+        padding-top: calc(var(--header-height) + 10px); /* 小さな画面向けに調整 */
+        padding-bottom: calc(var(--footer-height) + 10px);
     }
 
 }
