@@ -28,6 +28,7 @@ header .icon, header .search {
 
 /* メイン */
 main {
+    margin-top: 80px;
     padding-top: 0; /* 初期値としてヘッダーの高さ分を確保 */
     padding-bottom: 10vh; /* 初期値としてフッターの高さ分を確保 */
 }
