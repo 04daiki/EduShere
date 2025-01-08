@@ -190,6 +190,6 @@ footer .tab img {
 
     /* チャット画面へのテキスト */
     .change-chat{
-        font-size: 10px;
+        font-size: 10px;    /*コメント*/
     }
 }
