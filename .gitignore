@@ -109,3 +109,6 @@ venv.bak/
 static/uploads/*
 !static/uploads/.gitkeep
 
+# migrationsフォルダ
+migrations/
+
