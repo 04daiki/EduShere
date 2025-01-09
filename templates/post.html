@@ -21,11 +21,12 @@
 
 
     <main id="main">
+        <div id="uploadButton"></div>
         <form method="POST" action="">
             {{ form.csrf_token }}
             <div class="form-group">
                 {{ form.photo.label(class=photo) }}<label style="color: #FF5A2A;">［必須］</label><br>
-                {{ form.photo }}<br>
+                {{ form.photo(id="fileInput") }}<br>
                 {% if form.photo.errors %}
                 <ul>
                     {% for error in form.photo.errors %}
@@ -619,6 +620,35 @@
                 }
             }
         };
+
+        // 要素を取得
+    const uploadButton = document.getElementById("uploadButton");
+    const fileInput = document.getElementById("fileInput");
+
+    // ボタンがクリックされたときにファイル選択ダイアログを開く
+    uploadButton.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    // ファイルが選択されたときの処理
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+
+      // ファイルが画像の場合のみ処理を実行
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+
+        // ファイルを読み込み終わったらボタンの背景に設定
+        reader.onload = (e) => {
+          uploadButton.style.backgroundImage = `url(${e.target.result})`;
+          uploadButton.textContent = ""; // テキストを非表示にする
+        };
+
+        reader.readAsDataURL(file); // ファイルをデータURLとして読み込む
+      } else {
+        alert("画像ファイルを選択してください！");
+      }
+    });
     </script>
 
 
