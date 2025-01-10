@@ -173,10 +173,10 @@ def show_detail(post_id):
     if dform.validate_on_submit():
         
         # ポイントの払い戻し
-        if post.requet:
+        if post.request:
             for request in post.request:
                 request.user.point = request.user.point + 1
- 
+
         db.session.delete(post)
         db.session.commit()
         flash('商品を削除しました')
