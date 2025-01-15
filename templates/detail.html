@@ -501,13 +501,13 @@
     
     {% if message_display == False %}
         <!-- フッター -->
-        <footer> 
             <!-- 自分が投稿した教材かどうか -->
             {% if post.user_id != id %}
             <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
                 {{ form.csrf_token }}
                 {{ form.userid(value=post.user_id) }}
                 {{ form.message }}
+                <br>
                 {{ form.submit(class="post-button")}}
             </form>
             {% else %}
@@ -516,19 +516,28 @@
                 {{form.submit(class="delete-button")}}
             </form>
             {% endif %}
-        </footer>
     <!-- メッセージ欄 -->
     {% else %}
-        <form method="post" action="{{url_for('message', post_id=post.post_id)}}">
+    <h1 class="chat-title">チャット</h1>
+    <div class="chat-container">
+        <!-- メッセージ表示エリア -->
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if message.user.username == current_user.username %}self{% else %}other{% endif %}">
+                    <p>{{ message.message }}</p>
+                    <small>{{ message.user.username }} - {{ message.timestamps }}</small>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- 入力フォーム -->
+        <form class="form-container" method="post" action="{{url_for('message', post_id=post.post_id)}}">
             {{ form.csrf_token }}
-            {{ form.userid(value=id) }}
-            {{ form.message }}
-            {{ form.submit }}
+            <input type="text" name="userid" value="{{ id }}" hidden>
+            {{ form.message(class_='form-control', placeholder='あいさつ・集合日時・場所などを入力...') }}
+            <input type="submit" class="form-button" value="送信">
         </form>
-        <!-- メッセージ表示 -->
-        {% for message in messages %}
-            <p>{{ message.message }} <br> {{ message.user.username }} - {{ message.timestamps }} </p><br>
-        {% endfor %}
+    </div>
     {% endif %}
     
     
