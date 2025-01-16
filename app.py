@@ -100,7 +100,6 @@ def google_auth_callback():
 @login_required
 def logout():
     logout_user()
-    flash('ログアウトしました。')
     return redirect(url_for('login'))
 
 
@@ -133,7 +132,6 @@ def post():
         
         db.session.add(post)
         db.session.commit()
-        flash('商品を投稿しました')
 
         return redirect(url_for('home'))
         
@@ -154,7 +152,6 @@ def show_detail(post_id):
     # クリックされた教材の行取得
     post = Post.query.filter_by(post_id=post_id).first()
     if not post:
-        flash('該当する投稿が見つかりません。')
         return redirect(url_for('home'))
     
     # リクエストが承認された教材かどうか
@@ -179,7 +176,6 @@ def show_detail(post_id):
 
         db.session.delete(post)
         db.session.commit()
-        flash('商品を削除しました')
         return redirect(url_for('home'))
         
     if post.user_id == current_user.id:
@@ -203,7 +199,6 @@ def request(post_id):
         if sender.point >= 1:
             sender.point = sender.point - 1
         else:
-            flash("ポイントがありません")
             return redirect(url_for('home'))
                 
         
@@ -220,7 +215,6 @@ def request(post_id):
         post.status = 0
         
         db.session.commit()
-        flash('リクエストが送信されました')
         return redirect(url_for('home'))
     
 @app.route('/detail/message/<int:post_id>', methods=['GET', 'POST'])
