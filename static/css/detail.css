@@ -236,7 +236,9 @@ footer .delete-button{
     margin-left: 1vw;
 }
 
-
+.form-control{
+    resize: none;
+}
 /* レスポンシブ対応 */
 
 /* モバイル (スマホ) */
@@ -270,10 +272,9 @@ footer .delete-button{
     }
 
     main {
-        padding: 15px;
         min-height: auto; /* 高さを自動にして可変に */
         height: auto; /* コンテンツに合わせて高さを自動調整 */
-        padding-bottom: 3vh; /* フッターを十分に表示するための余白 */
+        padding-bottom: 50vh; /* フッターを十分に表示するための余白 */
     }
 
     .chat-title {
