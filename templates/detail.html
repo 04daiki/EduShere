@@ -501,13 +501,13 @@
     
     {% if message_display == False %}
         <!-- フッター -->
+        <footer>
             <!-- 自分が投稿した教材かどうか -->
             {% if post.user_id != id %}
             <form method="post" action="{{url_for('request', post_id=post.post_id)}}">
                 {{ form.csrf_token }}
                 {{ form.userid(value=post.user_id) }}
                 {{ form.message }}
-                <br>
                 {{ form.submit(class="post-button")}}
             </form>
             {% else %}
@@ -516,6 +516,7 @@
                 {{form.submit(class="delete-button")}}
             </form>
             {% endif %}
+        </footer>
     <!-- メッセージ欄 -->
     {% else %}
     <h1 class="chat-title">チャット</h1>
