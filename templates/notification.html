@@ -35,7 +35,7 @@
                     <div class="notification-content">
                         <p class="notification-title">{{ request.posts.item_name }}</p>
                         {% if request.recipient_id == current_user %}
-                            <p class="notification-text">リクエストが届いています<br>メッセージ："{{request.request_text}}"</p>
+                            <p class="notification-text">リクエストが届いています</p>
                         {% else %}
                             <p class="notification-text">リクエストが承認されました</p>
                         {% endif %}
