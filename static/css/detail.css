@@ -106,7 +106,7 @@ footer {
     width: 100%;
 }
 
-.post-button {
+footer .post-button {
     width: 50vw;  /* 横幅を画面の50%に設定 */
     height: 7vh;  /* 縦幅を画面の7%に設定 */
     font-size: 4vh;
@@ -116,10 +116,9 @@ footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 5vh;
 }
 
-.delete-button{
+footer .delete-button{
     width: 50vw;  /* 横幅を画面の50%に設定 */
     height: 7vh;  /* 縦幅を画面の7%に設定 */
     font-size: 4vh;
