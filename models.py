@@ -68,7 +68,7 @@ class Request(db.Model):
     __tablename__ = 'requests'
     
     request_id = db.Column(db.Integer, primary_key=True) #主キー
-    request_text = db.Column(db.String(200), nullable=False) #コメント
+    request_text = db.Column(db.String(200))# nullable=False #コメント
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # リクエストを送ったユーザーID
     post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'))  # 投稿ID
     recipient_id = db.Column(db.Integer,db.ForeignKey('user.id'))  # リクエストを受けとったユーザーID

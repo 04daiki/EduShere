@@ -211,7 +211,8 @@ def request(post_id):
         receiver.user.point = receiver.user.point + 1
         
         # リクエスト追加
-        request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
+        # request = Request(request_text = rform.message.data, user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
+        request = Request(user_id = current_user.id, post_id = post_id, recipient_id = rform.userid.data)
         db.session.add(request)
         
         #取引成立フラグ、ホームに表示されないように
